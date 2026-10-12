@@ -1,0 +1,37 @@
+{
+  "name": "terra-widget",
+  "version": "1.0.0",
+  "description": "A water widget for terra.hackclub.com",
+  "keywords": [
+    "widget",
+    "terra",
+    "hackclub"
+  ],
+  "homepage": "https://github.com/majcek210/terra-widget#readme",
+  "bugs": {
+    "url": "https://github.com/majcek210/terra-widget/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/majcek210/terra-widget.git"
+  },
+  "license": "ISC",
+  "author": "majcek210",
+  "type": "module",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "dependencies": {
+    "@colyseus/sdk": "latest",
+    "dotenv": "^18.0.7"
+  }
+}
