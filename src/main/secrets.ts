@@ -64,9 +64,9 @@ export async function saveToken(raw: string) {
     cached = token;
     if(!safeStorage.isEncryptionAvailable()) return {ok: true, saved: false, expiresAt: checked.expiresAt }
 
-    const bytes = await safeStorage.encryptStringAsync(token)
     const tmp = file() + ".tmp"
     try {
+        const bytes = await safeStorage.encryptStringAsync(token)
         writeFileSync(tmp, bytes)
         renameSync(tmp, file())
     } catch {

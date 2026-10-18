@@ -2,8 +2,7 @@ import { app } from "electron"
 import { join } from "node:path"
 import { readFile, rename, mkdir, writeFile } from "node:fs/promises"
 
-import type { Settings, settingsLisener } from "./../lib/types"
-import { listeners } from "node:process"
+import type { Settings, settingsLisener, settingsUpdateResult } from "./../lib/types"
 
 const DEFAULT_SETTINGS: Settings = {
     version: "v1.0",
@@ -12,6 +11,8 @@ const DEFAULT_SETTINGS: Settings = {
     debug: false
 }
 
+const MAX_MARGIN = 300
+
 let currentSettings: Settings
 let isLoaded = false
 const settingLiseners = new Set<settingsLisener>();
@@ -19,19 +20,18 @@ const settingLiseners = new Set<settingsLisener>();
 function validate(input: any) : Settings {
     const settings = { ...DEFAULT_SETTINGS}
 
-    if (input?.debug && typeof(input.debug) == "boolean") {
+    if (typeof input?.debug === "boolean") {
         settings.debug = input.debug
     }
 
-    if (input?.marginX && typeof(input.marginX) == "number" && Number.isFinite(input.marginX)) {
-        settings.marginX = Math.max(0, Math.min(200, Math.round(input.marginX)))
+     if (typeof input?.marginX === "number" && Number.isFinite(input.marginX)) {
+        settings.marginX = Math.max(0, Math.min(MAX_MARGIN, Math.round(input.marginX)))
+    }
+    if (typeof input?.marginY === "number" && Number.isFinite(input.marginY)) {
+        settings.marginY = Math.max(0, Math.min(MAX_MARGIN, Math.round(input.marginY)))
     }
 
-    if (input?.marginY && typeof(input.marginY) == "number" && Number.isFinite(input.marginY)) {
-        settings.marginY = Math.max(0, Math.min(200, Math.round(input.marginY)))
-    }
-
-    if (input?.version && typeof(input.version) == "string") {
+    if (typeof input?.version === "string") {
         settings.version = input.version
     }
 
@@ -96,68 +96,56 @@ export async function saveSettings(): Promise<void> {
     await rename(tempPath, path)
 }
 
-export async function updateSettings(patch: Partial<Settings>) {
-    if (!patch || typeof patch !== "object" || Array.isArray(patch)){
-        return { sucess: false, error: "Invalid patcj"}
+export async function updateSettings(patch: Partial<Settings>): Promise<settingsUpdateResult> {
+    if (!patch || typeof patch !== "object" || Array.isArray(patch)) {
+        return { success: false, error: "Invalid patch" }
     }
 
     const allowedPatches = ["marginX", "marginY", "debug", "version"]
-
-    const updated = { ...currentSettings };
+    const updated = { ...currentSettings }
 
     for (const [key, value] of Object.entries(patch)) {
         if (!allowedPatches.includes(key)) {
-            return { sucess: false, error: "invalid setting"}
+            return { success: false, error: "Invalid setting" }
         }
         switch (key) {
             case "debug":
-                if (typeof value !== "boolean") {
-                    return { sucess: false, error: "invalid debug data"}
-                }
-                updated.debug = value;
+                if (typeof value !== "boolean") return { success: false, error: "Invalid debug value" }
+                updated.debug = value
                 break
             case "marginX":
             case "marginY":
                 if (typeof value !== "number" || !Number.isFinite(value)) {
-                    return { success: false, error: "Invalid value at margin"}
+                    return { success: false, error: "Invalid margin" }
                 }
-
-                updated[key] = Math.max(0, Math.min(200, Math.round(value)));
-                break;
+                updated[key] = Math.max(0, Math.min(MAX_MARGIN, Math.round(value)))
+                break
             case "version":
-                if (typeof value !== "string") {
-                    return { sucess: false, error: "Invalid version"}
-                }
+                if (typeof value !== "string") return { success: false, error: "Invalid version" }
+                updated.version = value
+                break
         }
     }
-    const previous = currentSettings;
-    currentSettings = updated;
+
+    const previous = currentSettings
+    currentSettings = updated
 
     try {
         await saveSettings()
-    } catch(error) {
-        currentSettings = previous;
-        return {
-            sucess: false,
-            error: "Failed to save settings"
-        }
+    } catch {
+        currentSettings = previous
+        return { success: false, error: "Failed to save settings" }
     }
 
-    const settings = {...currentSettings}
-
+    const settings = { ...currentSettings }
     for (const lisener of settingLiseners) {
         try {
-            lisener({ ... settings})
+            lisener({ ...settings })
         } catch (err) {
             console.error("Lisener failed to execute w error: ", err)
         }
     }
-
-
-    return { 
-        success: true,
-        settings
-    }
+    return { success: true, settings }
 }
 
 export function onSettingsChanged(lisener: settingsLisener): () => void {

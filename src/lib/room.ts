@@ -1,5 +1,4 @@
 import { Client, Room } from "@colyseus/sdk"
-import { error } from "console";
 import type { hoursUpdateData, roomConnections, roomOptions } from "./types";
 
 
@@ -19,6 +18,8 @@ export default class RoomHandler {
     hops: number
     hopping: boolean
 
+    connected: boolean
+
     started: number
 
     connections: roomConnections
@@ -35,10 +36,13 @@ export default class RoomHandler {
         this.hopping = false;
         this.options = options;
 
+        this.connected = false
+
         this.connections = {
             onHours: [],
             onClose: [],
-            onCrash: []
+            onCrash: [],
+            onConflict: []
         }
 
         this.hops = 0;
@@ -57,6 +61,9 @@ export default class RoomHandler {
     onCrash(func: (args: string) => void) {
         this.connections.onCrash.push(func)
     }
+    onConflict(func: () => void) {
+        this.connections.onConflict.push(func)
+    }
 
     log(message: string) {
         console.log(`${((Date.now() - this.started) / 1000).toFixed(1).padStart(7)}s | ${message}`)
@@ -73,9 +80,11 @@ export default class RoomHandler {
     }
 
     async connect() {
+        if (this.connected) return
         this.hops = 0
         this.leaving = false
         await this.join("town-square")
+        this.connected = true
     }
 
     async join(levelId: string, extra : any = {}) {
@@ -87,6 +96,11 @@ export default class RoomHandler {
                 ...extra
             },
         )
+
+        if(this.leaving) {
+            await instance.leave(true)
+            return
+        }
         this.current = instance
         this.attach(instance)
     }
@@ -142,10 +156,15 @@ export default class RoomHandler {
             room.reconnection.maxRetries = 0
             this.current = null
             void room.leave(true)
-            void this.errorCrash("This account is already active somewhere, please close the tab in order to use the widget!")
+            this.connections.onConflict.forEach(func => func())
         })
 
         room.onMessage("sessionKicked", () => {
+            this.debug("Session was kicked")
+            this.leaving = true
+            this.current = null
+            void room.leave(true)
+            this.connections.onConflict.forEach(func => func() )
         })
 
 

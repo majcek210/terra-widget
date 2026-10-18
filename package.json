@@ -25,7 +25,29 @@
   "scripts": {
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
-    "prebuild": "electron-vite build"
+    "build": "electron-vite build",
+    "dist": "electron-vite build && electron-builder --win --publish never"
+  },
+  "build": {
+    "appId": "com.majcek210.terrawidget",
+    "productName": "Terra Widget",
+    "files": [
+      "out/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

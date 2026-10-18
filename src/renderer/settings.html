@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' ws://localhost:*">
+
+    <link rel="stylesheet" href="./styles/settings.css">
+    <script type="module" src="./scripts/settings.ts"></script>
+
+    <title>Terra Widget Settings</title>
+</head>
+<body>
+
+    <main class="settings">
+        <h1>Settings</h1>
+
+        <section class="card">
+            <h2>Account</h2>
+            <p class="token_status" id="token_status">Loading</p>
+
+            <form id="token_form" autocomplete="off">
+                <label for="token_input">Terra token</label>
+                <input id="token_input" type="password" spellcheck="false" autocomplete="off"
+                       autocapitalize="off" required maxlength="4096" placeholder="Paste your token">
+                <div class="row">
+                    <button type="submit" class="primary">Save token</button>
+                    <button type="button" id="token_clear">Sign out</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2>Widget</h2>
+
+            <form id="settings_form">
+                <div class="field">
+                    <label for="margin_x">Margin X</label>
+                    <input id="margin_x" type="number" min="0" max="300" step="1" required>
+                </div>
+                <div class="field">
+                    <label for="margin_y">Margin Y</label>
+                    <input id="margin_y" type="number" min="0" max="300" step="1" required>
+                </div>
+                <label class="check">
+                    <input id="debug" type="checkbox">
+                    Debug logging
+                </label>
+                <div class="row">
+                    <button type="submit" class="primary">Save</button>
+                </div>
+            </form>
+        </section>
+
+        <p class="message" id="message" role="status"></p>
+
+        <p class="notice">Not affiliated with Terra or Hack Club. Fan project, use at your own risk.</p>
+    </main>
+
+</body>
+</html>

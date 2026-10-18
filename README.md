@@ -4,4 +4,8 @@ The project will for now be written in typescript.
 App will require you to provide your own session token(see the docs for the tutorial) that will be used to run the widget, I might implement some other automatic options, when i test them and check the ToS of terra.
 Thanks!
 
+# AI usage
+AI was used to make the settings page(**ONLY** html and css) caouse im pretty bad at designing. It was also used to checkup the security before shiping and a bit of ai code was produced here to keep it secure.
+
+# a small note
 Note to the reviewers: Comments are for my better understanding and not from ai code (:

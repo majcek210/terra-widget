@@ -1,0 +1,118 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #ffca86;
+    color: #462114;
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+}
+
+.settings {
+    padding: 16px;
+}
+
+h1 {
+    margin: 0 0 12px;
+    font-size: 20px;
+}
+
+h2 {
+    margin: 0 0 8px;
+    font-size: 15px;
+}
+
+.card {
+    background: #ffe2b8;
+    border: 2px solid #462114;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 2px 3px 0 #3b1900;
+}
+
+label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+input[type=password],
+input[type=number] {
+    width: 100%;
+    padding: 6px 8px;
+    border: 2px solid #462114;
+    border-radius: 6px;
+    background: #fff7ec;
+    color: #462114;
+    font: inherit;
+}
+
+.field {
+    margin-bottom: 10px;
+}
+
+.check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400;
+}
+
+.row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+button {
+    padding: 6px 12px;
+    border: 2px solid #462114;
+    border-radius: 999px;
+    background: #fff7ec;
+    color: #462114;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button.primary {
+    background: #c7793c;
+    color: #fff7ec;
+}
+
+button:hover {
+    filter: brightness(1.05);
+}
+
+.token_status {
+    margin: 0 0 10px;
+}
+
+.message {
+    min-height: 1.2em;
+    margin: 0 0 8px;
+}
+
+.message[data-error=true] {
+    color: #a3261b;
+}
+
+.notice {
+    margin: 0;
+    font-size: 12px;
+    opacity: .7;
+}
+button:disabled {
+    opacity: .5;
+    cursor: default;
+    filter: none;
+}
+
+input:focus-visible,
+button:focus-visible {
+    outline: 2px solid #2f6f9e;
+    outline-offset: 2px;
+}
