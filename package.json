@@ -28,6 +28,9 @@
   "build": {
     "appId": "com.majcek210.terrawidget",
     "productName": "Terra Widget",
+    "directories": {
+      "output": "release"
+    },
     "files": [
       "out/**/*",
       "package.json"
