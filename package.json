@@ -35,9 +35,6 @@
       "out/**/*",
       "package.json"
     ],
-    "directories": {
-      "output": "release"
-    },
     "win": {
       "target": [
         "nsis",
