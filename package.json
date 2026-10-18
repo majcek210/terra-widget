@@ -1,6 +1,6 @@
 {
   "name": "terra-widget",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A water widget for terra.hackclub.com",
   "keywords": [
     "widget",
@@ -52,12 +52,11 @@
   "devDependencies": {
     "@types/node": "^22.20.5",
     "electron": "^44.9.0",
+    "electron-builder": "^26.15.3",
     "electron-vite": "^6.0.0",
-    "tsx": "^4.19.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@colyseus/sdk": "latest",
-    "dotenv": "^18.0.7"
+    "@colyseus/sdk": "latest"
   }
 }
