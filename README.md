@@ -1,8 +1,13 @@
+https://hackatime.hackclub.com/api/v1/badge/U0C7Q1X50RX/majcek210/terra-widget
+
 # terra-widget
 The project's goal is to make a widget for your desktop that would show off your water goals and working hours, so you wont need to have terra open everytime.
 The project will for now be written in typescript.
 App will require you to provide your own session token(see the docs for the tutorial) that will be used to run the widget, I might implement some other automatic options, when i test them and check the ToS of terra.
 Thanks!
+
+# Notice
+You computer will probably block the exe from running. To unblock it: Right-click Terra.Widget.x.x.x.exe, choose Properties, tick Unblock at the bottom, click OK, then double-click it.
 
 # Setup
 1. Grab the latest exe from [Releases](https://github.com/majcek210/terra-widget/releases). `Terra.Widget.Setup.x.x.x.exe` installs it, `Terra.Widget.x.x.x.exe` is portable and just runs.
