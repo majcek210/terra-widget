@@ -16,3 +16,16 @@ console.log("Created the handler")
 await RoomMain.connect()
 
 console.log("Connected to the room, from the test")
+
+RoomMain.onHoursUpdate((data) => {
+    console.log("Recived data!")
+    console.log(JSON.stringify(data))
+})
+
+RoomMain.onClose(() => {
+    console.log("Room closed")
+})
+
+RoomMain.onCrash((data) => {
+    console.log("There was a crash: "+ data)
+})

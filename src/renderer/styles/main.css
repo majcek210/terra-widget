@@ -1,0 +1,142 @@
+.main_progress_container {
+    user-select: none;
+    z-index: 50;
+    pointer-events: none;
+    align-items: flex-end;
+    gap: .61em;
+    font-size: clamp(14px, 1.8vmin, 24px);
+    display: flex;
+}
+
+.border_container {
+    pointer-events: auto;
+    background: #c7793c;
+    border: clamp(2px, .3vmin, 4px) solid #462114;
+    border-radius: 999px;
+    padding: .18em;
+    box-shadow:
+        clamp(2px, .1vmin, 2px) clamp(2px, .15vmin, 3px) #3b1900,
+        clamp(2px, .1vmin, 2px) clamp(2px, .15vmin, 3px) 0
+        clamp(1px, .1vmin, 2px) #1d0c00;
+}
+
+.border_container[data-done=true] .fill {
+    background: linear-gradient(90deg, #4fa3d9, #7cc0ea);
+    box-shadow: 0 0 .6em #4fa3d9b3;
+}
+
+.pipe_container {
+    background: #ffca86;
+    border-radius: 999px;
+    width: 1.3em;
+    height: clamp(120px, 20vmin, 280px);
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 .15em #3b190040;
+}
+
+.fill {
+    background: linear-gradient(90deg, #2f6f9e, #4fa3d9);
+    transition: height .6s ease-out;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.ai_fill {
+    background: linear-gradient(90deg, #6e4aa0, #a77fd6);
+    transition: height .6s ease-out, bottom .6s ease-out;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.dev_logged {
+    background: #ffffff2e;
+    border-top: 2px dashed #ffffffd9;
+    transition: height .6s ease-out;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.ai_cut {
+    background: repeating-linear-gradient(
+        -45deg,
+        #46211447 0 .25em,
+        #0000 .25em .5em
+    );
+    border-top: 2px dashed #4621148c;
+    transition: height .6s ease-out, bottom .6s ease-out;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.progress_label_container {
+    font-family: var(--game-font, "Pleasurize", cursive);
+    color: #93582c;
+    paint-order: stroke fill;
+    -webkit-text-stroke: 2px #f9e6ce;
+    letter-spacing: .03em;
+    white-space: nowrap;
+    flex-direction: column;
+    gap: .05em;
+    display: flex;
+}
+
+.procentage_value {
+    white-space: nowrap;
+    -webkit-text-stroke: 3px #f9e6ce;
+    font-size: 1.8em;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.label_goal {
+    font-size: 1.2em;
+}
+.total_hours {
+    font-size: 1em;
+}
+
+
+.not_vlogged_value {
+    color: #462114;
+    font-size: .9em;
+}
+
+.more_button {
+    font-size: .6em;
+    font-family: var(--game-font, "Pleasurize", cursive);
+    color: #93582c;
+    paint-order: stroke fill;
+    -webkit-text-stroke: 2px #f9e6ce;
+    letter-spacing: .03em;
+    white-space: nowrap;
+    flex-direction: column;
+    gap: .010em;
+    display: flex;
+    margin-top: 10px
+}
+
+@media (width <= 500px) {
+    .main_progress_container {
+        bottom: calc(
+            max(1rem, env(safe-area-inset-bottom))
+            + clamp(100px, 26vmin, 150px)
+            + 1rem
+        );
+        font-size: 11px;
+    }
+
+    .pipe_container {
+        height: 72px;
+    }
+
+    .label_goal {
+        display: none;
+    }
+}

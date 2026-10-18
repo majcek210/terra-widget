@@ -1,5 +1,6 @@
 import { Client, Room } from "@colyseus/sdk"
 import { error } from "console";
+import type { hoursUpdateData, roomConnections, roomOptions } from "./types";
 
 
 //configs
@@ -7,9 +8,7 @@ const client = new Client("https://game.terra.hackclub.com")
 const MAX_HOPS = 3;
 
 
-export interface  roomOptions {
-    debug: boolean
-}
+
 interface RedirectMessage { levelId: string; farmOwnerId?: string }
 
 export default class RoomHandler {
@@ -21,10 +20,13 @@ export default class RoomHandler {
     hopping: boolean
 
     started: number
+
+    connections: roomConnections
     
     constructor(token: string, options: roomOptions) {
         if (!token) {
-           throw error("Somehow token wasn't set.")
+           throw Error("No token was set.")
+           
         }
 
         this.token = token;
@@ -33,10 +35,27 @@ export default class RoomHandler {
         this.hopping = false;
         this.options = options;
 
+        this.connections = {
+            onHours: [],
+            onClose: [],
+            onCrash: []
+        }
+
         this.hops = 0;
 
         this.started = Date.now();
 
+    }
+
+
+    onHoursUpdate(func: (args : hoursUpdateData) => void) {
+        this.connections.onHours.push(func)
+    }
+    onClose(func: (args: number) => void) {
+        this.connections.onClose.push(func)
+    }
+    onCrash(func: (args: string) => void) {
+        this.connections.onCrash.push(func)
     }
 
     log(message: string) {
@@ -49,8 +68,8 @@ export default class RoomHandler {
     }
 
     async errorCrash(msg:string) {
-        // ui logic wilkl be implementedd here later when i work on it
-        console.log("Oh no! an error has occured! " + msg)
+        this.connections.onCrash.forEach(func => func(msg));
+        return
     }
 
     async connect() {
@@ -59,7 +78,7 @@ export default class RoomHandler {
         await this.join("town-square")
     }
 
-    async join(levelId: string, ...extra : any) {
+    async join(levelId: string, extra : any = {}) {
         const instance = await client.joinOrCreate(
             "world", { 
                 token: this.token,
@@ -108,9 +127,10 @@ export default class RoomHandler {
     private attach(room: Room) {
         this.debug(`JOINED room ${room.roomId} session ${room.sessionId}`)
 
-        //i was recommened to void these 2 bc they produce too much uneceserry output
+        //i was recommened to void these  bc they produce too much uneceserry output
         room.onMessage("chat.message", () => {})
         room.onMessage("pingCheck", () => {})
+        room.onMessage("objective.update", () => {})
 
         room.onMessage("*", (type,msg) => {
           this.debug(`unhandled ${String(type)} bytes=${JSON.stringify(msg)?.length ?? 0}`)
@@ -125,6 +145,15 @@ export default class RoomHandler {
             void this.errorCrash("This account is already active somewhere, please close the tab in order to use the widget!")
         })
 
+        room.onMessage("sessionKicked", () => {
+        })
+
+
+        room.onMessage("hours.update", (data: hoursUpdateData) => {
+            this.connections.onHours.forEach(func => func(data));
+        })
+
+
         room.onMessage("redirectToLevel", (rm: RedirectMessage) => {
             void this.hop(room, rm)
         })
@@ -132,6 +161,7 @@ export default class RoomHandler {
         room.onLeave((code) => {
             if (room !== this.current) return
             if (this.hopping ||this.leaving) return
+            this.connections.onClose.forEach(func => func(code))
             this.log(`unexpected leave, code ${code}`)
         })
 

@@ -18,15 +18,19 @@
   "license": "ISC",
   "author": "majcek210",
   "type": "module",
-  "main": "index.js",
+  "main": "./out/main/index.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron-vite preview",
+    "dev": "electron-vite dev",
+    "prebuild": "electron-vite build"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
+    "electron": "^44.9.0",
+    "electron-vite": "^6.0.0",
     "tsx": "^4.19.0",
     "typescript": "^5.9.3"
   },
