@@ -1,6 +1,6 @@
 {
   "name": "terra-widget",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A water widget for terra.hackclub.com",
   "keywords": [
     "widget",
@@ -19,9 +19,6 @@
   "author": "majcek210",
   "type": "module",
   "main": "./out/main/index.js",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
