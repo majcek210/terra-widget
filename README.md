@@ -1,9 +1,9 @@
-https://hackatime.hackclub.com/api/v1/badge/U0C7Q1X50RX/majcek210/terra-widget
+![time](https://hackatime.hackclub.com/api/v1/badge/U0C7Q1X50RX/majcek210/terra-widget)
 
 # terra-widget
 The project's goal is to make a widget for your desktop that would show off your water goals and working hours, so you wont need to have terra open everytime.
 The project will for now be written in typescript.
-App will require you to provide your own session token(see the docs for the tutorial) that will be used to run the widget, I might implement some other automatic options, when i test them and check the ToS of terra.
+App will require you to provide your own session token(see the setup part for the tutorial) that will be used to run the widget, I might implement some other automatic options, when i test them and check the ToS of terra.
 Thanks!
 
 # Notice
@@ -34,7 +34,7 @@ npm run dist   # build both exes into release/
 ```
 
 # AI usage
-AI was used to make the settings page(**ONLY** html and css) caouse im pretty bad at designing. It was also used to checkup the security before shiping and a bit of ai code was produced here to keep it secure.
+AI was used to make the settings page(**ONLY** html and css) cause im pretty bad at designing. It was also used to checkup the security before shiping and a bit of ai code was produced here to keep it secure.
 
 # a small note
 Note to the reviewers: Comments are for my better understanding and not from ai code (:
