@@ -116,3 +116,8 @@ button:focus-visible {
     outline: 2px solid #2f6f9e;
     outline-offset: 2px;
 }
+
+.exit_container {
+    display: inline-block;
+    padding-bottom: 15px;
+}

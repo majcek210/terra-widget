@@ -97,6 +97,10 @@ app.whenReady().then(async () => {
     
     const settings = getSettings()
 
+
+
+    //ipc stuff
+
     ipcMain.handle("state:get", event => {
         if (event.sender !== widgetWindow?.webContents) return null;   // later: also allow the settings window
         return getState();
@@ -116,6 +120,16 @@ app.whenReady().then(async () => {
         return updateSettings(patch as Partial<Settings>)
     })
 
+    ipcMain.handle("settings:close", async (event) => {
+        if (!fromSettings(event)) return
+        settingsWindow?.destroy()
+    })
+
+    ipcMain.handle("settings:close-widget", async (event) => {
+        if (!fromSettings(event)) return
+        app.quit()
+    })
+
     ipcMain.handle("token:save", async (event, raw: unknown) => {
         if (!fromSettings(event)) return null
         if (typeof raw !== "string") return { ok: false, reason: "invalid" }
@@ -133,6 +147,9 @@ app.whenReady().then(async () => {
         void start()
         return true
     })
+
+
+
 
     const widgetWindow = createWindow(settings.marginX, settings.marginY)
 

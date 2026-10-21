@@ -122,6 +122,11 @@
     margin-top: 10px
 }
 
+#status {
+    font-family: var(--game-font, "Pleasurize", cursive);
+    color: #93582c;
+}
+
 @media (width <= 500px) {
     .main_progress_container {
         bottom: calc(

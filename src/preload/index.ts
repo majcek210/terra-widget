@@ -18,7 +18,9 @@ contextBridge.exposeInMainWorld("terraSettings", {
     get: (): Promise<{ settings: Settings; token: TokenInfo } | null> => ipcRenderer.invoke("settings:get"),
     update: (patch: SettingsPatch): Promise<settingsUpdateResult | null> => ipcRenderer.invoke("settings:update", patch),
     saveToken: (raw: string): Promise<{ ok: boolean; reason?: string } | null> => ipcRenderer.invoke("token:save", raw),
-    clearToken: (): Promise<boolean> => ipcRenderer.invoke("token:clear")
+    clearToken: (): Promise<boolean> => ipcRenderer.invoke("token:clear"),
+    closeSettings: () => ipcRenderer.invoke("settings:close"),
+    closeWidget: () => ipcRenderer.invoke("settings:close-widget")
 })
 
 export {};
