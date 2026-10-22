@@ -1,4 +1,4 @@
-import type { TokenInfo } from "../../lib/types"
+import type { corner, TokenInfo } from "../../lib/types"
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T
 
@@ -9,6 +9,7 @@ const tokenStatus = $("token_status")
 const settingsForm = $<HTMLFormElement>("settings_form")
 const marginX = $<HTMLInputElement>("margin_x")
 const marginY = $<HTMLInputElement>("margin_y")
+const cornerField = $<HTMLInputElement>("corner")
 const debug = $<HTMLInputElement>("debug")
 const message = $("message")
 
@@ -36,6 +37,7 @@ async function load() {
     marginX.value = String(data.settings.marginX)
     marginY.value = String(data.settings.marginY)
     debug.checked = data.settings.debug
+    cornerField.value = data.settings.corner
     showToken(data.token)
 }
 
@@ -79,11 +81,15 @@ settingsForm.addEventListener("submit", e => {
     void busy(settingsForm, async () => {
         const x = marginX.valueAsNumber
         const y = marginY.valueAsNumber
+
+        const cornerValue = cornerField.value as corner
+
         if (!Number.isFinite(x) || !Number.isFinite(y)) {
             say("Margins must be numbers", true)
             return
         }
-        const r = await window.terraSettings.update({ marginX: x, marginY: y, debug: debug.checked })
+
+        const r = await window.terraSettings.update({ marginX: x, marginY: y, debug: debug.checked, corner: cornerValue})
         if (!r || !r.success) {
             say(r ? r.error : "Could not save", true)
             return

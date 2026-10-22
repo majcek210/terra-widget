@@ -39,6 +39,7 @@ label {
     font-weight: 600;
 }
 
+select,
 input[type=password],
 input[type=number] {
     width: 100%;
@@ -111,6 +112,7 @@ button:disabled {
     filter: none;
 }
 
+select:focus-visible,
 input:focus-visible,
 button:focus-visible {
     outline: 2px solid #2f6f9e;

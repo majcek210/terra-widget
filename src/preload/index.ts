@@ -1,8 +1,8 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { IpcRendererEvent } from "electron";
-import type { SessionState , Settings, TokenInfo, settingsUpdateResult } from "../lib/types"
+import type { SessionState , Settings, TokenInfo, settingsUpdateResult, SettingsPatch } from "../lib/types"
 
-type SettingsPatch = Partial<Pick<Settings, "marginX" | "marginY" | "debug">>
+
 
 contextBridge.exposeInMainWorld("terra", {
     getState: (): Promise<SessionState | null> => ipcRenderer.invoke("state:get"),

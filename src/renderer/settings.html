@@ -44,6 +44,15 @@
                     <label for="margin_y">Margin Y</label>
                     <input id="margin_y" type="number" min="0" max="300" step="1" required>
                 </div>
+                <div class="field">
+                    <label for="corner">Corner</label>
+                    <select required id="corner">
+                        <option value="top-right">top right</option>
+                        <option value="top-left">top left</option>
+                        <option value="bottom-right">bottom right</option>
+                        <option value="bottom-left">bottom left</option>
+                    </select>
+                </div>
                 <label class="check">
                     <input id="debug" type="checkbox">
                     Debug logging

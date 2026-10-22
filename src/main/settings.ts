@@ -2,13 +2,16 @@ import { app } from "electron"
 import { join } from "node:path"
 import { readFile, rename, mkdir, writeFile } from "node:fs/promises"
 
-import type { Settings, settingsLisener, settingsUpdateResult } from "./../lib/types"
+import type { Settings, settingsLisener, settingsUpdateResult, corner } from "./../lib/types"
+
+const corners: Array<corner> = ["top-left","top-right","bottom-left","bottom-right"]
 
 const DEFAULT_SETTINGS: Settings = {
     version: "v1.0",
     marginX: 10,
     marginY: 250,
-    debug: false
+    debug: false,
+    corner: "bottom-left"
 }
 
 const MAX_MARGIN = 300
@@ -33,6 +36,10 @@ function validate(input: any) : Settings {
 
     if (typeof input?.version === "string") {
         settings.version = input.version
+    }
+
+    if (typeof input?.corner === "string" && (corners.includes(input.corner))) {
+        settings.corner = input.corner
     }
 
     return settings
@@ -101,7 +108,7 @@ export async function updateSettings(patch: Partial<Settings>): Promise<settings
         return { success: false, error: "Invalid patch" }
     }
 
-    const allowedPatches = ["marginX", "marginY", "debug", "version"]
+    const allowedPatches = ["marginX", "marginY", "debug", "version", "corner"]
     const updated = { ...currentSettings }
 
     for (const [key, value] of Object.entries(patch)) {
@@ -123,6 +130,12 @@ export async function updateSettings(patch: Partial<Settings>): Promise<settings
             case "version":
                 if (typeof value !== "string") return { success: false, error: "Invalid version" }
                 updated.version = value
+                break
+            case "corner":
+                if (typeof value !== "string") return { success: false, error: "Invalid corner data" }
+                if (!corners.includes(value as corner)) return { success: false, error: "Invalid corner data" }
+
+                updated.corner = value as corner
                 break
         }
     }

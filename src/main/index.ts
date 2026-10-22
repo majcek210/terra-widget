@@ -2,22 +2,27 @@ import { app, BrowserWindow, screen, ipcMain } from "electron";
 import type { IpcMainInvokeEvent } from "electron";
 import { fileURLToPath } from "node:url";
 import { loadSettings, getSettings, updateSettings, onSettingsChanged } from "./settings";
-import type { Settings } from "../lib/types";
+import type { Settings, corner } from "../lib/types";
 import { start, stop, getState, onState } from "./session"
 
 import { saveToken, clearToken, tokenInfo } from "./secrets"
 
-const WIDGET_SIZE = { width: 170, height: 520 }
+const WIDGET_SIZE = { width: 170, height: 350 }
 
-function widgetPosition(marginX: number, marginY: number) {
+
+function widgetPosition(corner:corner,marginX: number, marginY: number) {
     const { workArea } = screen.getPrimaryDisplay()
+
+    const isRight = corner.endsWith("right")
+    const isBottom = corner.startsWith("bottom")
+
     return {
-        x: workArea.x + marginX,
-        y: workArea.y + workArea.height - WIDGET_SIZE.height + marginY
+        x: isRight ? (workArea.x + workArea.width - WIDGET_SIZE.width - marginX) : workArea.x + marginX,
+        y: isBottom ? workArea.y + workArea.height - WIDGET_SIZE.height - marginY : workArea.y + marginY
     }
 }
 
-function createWindow(marginX: number, marginY: number) {
+function createWindow(corner: corner,marginX: number, marginY: number) {
 
     const win = new BrowserWindow({
         ...WIDGET_SIZE,
@@ -30,7 +35,7 @@ function createWindow(marginX: number, marginY: number) {
         alwaysOnTop: true,
         transparent: true,
 
-        ...widgetPosition(marginX, marginY),
+        ...widgetPosition(corner,marginX, marginY),
 
         webPreferences: {
             nodeIntegration: false,
@@ -151,11 +156,11 @@ app.whenReady().then(async () => {
 
 
 
-    const widgetWindow = createWindow(settings.marginX, settings.marginY)
+    const widgetWindow = createWindow(settings.corner,settings.marginX, settings.marginY)
 
     onSettingsChanged(s => {
         if (widgetWindow.isDestroyed()) return
-        const { x, y } = widgetPosition(s.marginX, s.marginY)
+        const { x, y } = widgetPosition(s.corner,s.marginX, s.marginY)
         widgetWindow.setPosition(x, y)
     })
 

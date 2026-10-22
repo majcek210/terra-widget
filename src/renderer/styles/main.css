@@ -1,3 +1,10 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
 .main_progress_container {
     user-select: none;
     z-index: 50;
@@ -119,7 +126,9 @@
     flex-direction: column;
     gap: .010em;
     display: flex;
-    margin-top: 10px
+    flex: none;
+    margin-top: 10px;
+    width: max-content;
 }
 
 #status {
