@@ -113,10 +113,19 @@ async function connect() {
         setState("conflict", "This account is active somewhere else! Close the tab to use it here")
     })
 
+
     try {
         await roomHandler.connect()
     } catch (err: any) {
         if (handler !== roomHandler) return
+
+
+        // had to put this here bc it doesnt register under onConflict, idk why
+        if (err && (err.code == 4412)) {
+            void dropHandler()
+            setState("conflict", "This account is active somewhere else! Close the tab to use it here")
+            return
+        }
 
         console.log("connection failed: ", err?.code, err?.message)
         scheduleRetry(err?.message ? String(err.message) : "Count not connect to the room")

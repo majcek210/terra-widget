@@ -123,6 +123,7 @@
 }
 
 #status {
+    padding-bottom: 10px;
     font-family: var(--game-font, "Pleasurize", cursive);
     color: #93582c;
 }

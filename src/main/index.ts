@@ -7,7 +7,7 @@ import { start, stop, getState, onState } from "./session"
 
 import { saveToken, clearToken, tokenInfo } from "./secrets"
 
-const WIDGET_SIZE = { width: 220, height: 520 }
+const WIDGET_SIZE = { width: 170, height: 520 }
 
 function widgetPosition(marginX: number, marginY: number) {
     const { workArea } = screen.getPrimaryDisplay()
