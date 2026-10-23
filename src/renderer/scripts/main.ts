@@ -1,10 +1,8 @@
 import { render } from "./progress"
 const button = document.querySelector<HTMLElement>(".more_button")
-const notice =  document.querySelector<HTMLElement>(".notice")
 
-if (button && notice) {
+if (button) {
     button.addEventListener("click", () => {
-        button.textContent = notice.hidden ? "More" : "Close";
         window.terra.openSettings()
     })
 }

@@ -9,7 +9,7 @@ const corners: Array<corner> = ["top-left","top-right","bottom-left","bottom-rig
 const DEFAULT_SETTINGS: Settings = {
     version: "v1.0",
     marginX: 10,
-    marginY: 250,
+    marginY: 20,
     debug: false,
     corner: "bottom-left"
 }
