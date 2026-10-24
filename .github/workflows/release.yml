@@ -21,7 +21,9 @@ jobs:
 
       - run: npm ci
       - run: npx tsc --noEmit
-      - run: npm run dist
+      - run: npm run dist -- --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/upload-artifact@v4
         with:

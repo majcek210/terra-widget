@@ -1,10 +1,13 @@
-import { app, BrowserWindow, screen, ipcMain} from "electron";
+import { app, BrowserWindow, screen, ipcMain, shell } from "electron";
 import type { IpcMainInvokeEvent } from "electron";
 import { fileURLToPath } from "node:url";
 import { loadSettings, getSettings, updateSettings, onSettingsChanged } from "./settings";
 import type { Settings, corner } from "../lib/types";
 import { start, stop, getState, onState } from "./session"
 import { createTray } from "./tray"
+import electronUpdater from "electron-updater";
+
+const { autoUpdater } = electronUpdater
 
 import { saveToken, clearToken, tokenInfo } from "./secrets"
 
@@ -108,6 +111,16 @@ if (!isSingleInstance) {
 
 let widgetWindow: BrowserWindow 
 app.whenReady().then(async () => {
+
+    if (app.isPackaged) {
+        autoUpdater.on("update-available", () => {
+            if (process.env.PORTABLE_EXECUTABLE_FILE) {
+                shell.openExternal("https://github.com/majcek210/terra-widget/release")
+            }
+        })
+        autoUpdater.checkForUpdatesAndNotify()
+    }
+
     await loadSettings()
     
     const settings = getSettings()

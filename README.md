@@ -14,8 +14,13 @@ You computer will probably block the exe from running. To unblock it: Right-clic
 2. Windows will probably say "Windows protected your PC" because the exe isn't signed. Click **More info** and then **Run anyway**.
 3. The widget sits in the bottom left corner of your screen. It has no taskbar icon, so look for it there.
 4. Click **More**, paste your Terra token (see below) and hit **Save token**. You can move the widget with the margins in the same window.
-
 Your token is saved encrypted on your PC (only your Windows account can read it) and is only sent to Terra.
+
+#Windows installation and updates
+Terra Widget supports automatic updates when installed with **NSIS installer**.
+Portable builds do not install updates automaticlly. Download the latest version from the GitHub Releases. 
+The application is unsigned so a windows SmartScreen may display a warning when you download or run a release.
+
 
 ## Getting your token
 1. Open [terra.hackclub.com](https://terra.hackclub.com) in your browser and press **F12** to open DevTools.

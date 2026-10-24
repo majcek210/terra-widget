@@ -23,7 +23,7 @@
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
     "build": "electron-vite build",
-    "dist": "electron-vite build && electron-builder --win --publish never"
+    "dist": "electron-vite build && electron-builder --win"
   },
   "build": {
     "appId": "com.majcek210.terrawidget",
@@ -45,6 +45,11 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
+    "publish": {
+      "provider": "github",
+      "owner": "majcek210",
+      "repo": "terra-widget"
+    },
     "extraResources": [
       {
         "from": "src/assets/icon.ico",
@@ -60,6 +65,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@colyseus/sdk": "^0.18.4"
+    "@colyseus/sdk": "^0.18.4",
+    "electron-updater": "^6.8.11"
   }
 }
