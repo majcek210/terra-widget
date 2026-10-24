@@ -92,7 +92,7 @@ export default class RoomHandler {
             "world", { 
                 token: this.token,
                 levelId: levelId,
-                protocol: 1,
+                protocol: 2,
                 ...extra
             },
         )

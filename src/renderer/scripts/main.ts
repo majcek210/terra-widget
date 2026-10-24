@@ -1,4 +1,5 @@
 import { render } from "./progress"
+
 const button = document.querySelector<HTMLElement>(".more_button")
 
 if (button) {

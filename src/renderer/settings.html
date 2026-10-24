@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="./styles/settings.css">
     <script type="module" src="./scripts/settings.ts"></script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.7.1/dist/css/tabler.min.css" integrity="sha384-FwFRx3iCRjX2MYq9Ni5guhu0G/HAeKcgZhAMxMtZkceAylYMpaOn6hHeId2bywU9" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.7.1/dist/js/tabler.min.js" integrity="sha384-eqBhoRQcupNldY9cDRl77mvk57Y7DWYa+nVjNzLLwtwVynw+RpM/FotWDnIODMwM" crossorigin="anonymous"></script>
+
     <title>Terra Widget Settings</title>
 </head>
 <body>
@@ -23,6 +26,7 @@
 
             <form id="token_form" autocomplete="off">
                 <label for="token_input">Terra token</label>
+                <i class="ti ti-help-hexagon"></i>
                 <input id="token_input" type="password" spellcheck="false" autocomplete="off"
                        autocapitalize="off" required maxlength="4096" placeholder="Paste your token">
                 <div class="row">

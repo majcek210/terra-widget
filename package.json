@@ -48,12 +48,12 @@
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
-    "electron": "^44.9.0",
+    "electron": "^45.0.0",
     "electron-builder": "^26.15.3",
     "electron-vite": "^6.0.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@colyseus/sdk": "latest"
+    "@colyseus/sdk": "^0.18.4"
   }
 }

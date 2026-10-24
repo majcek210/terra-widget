@@ -39,7 +39,7 @@ export function render(s: SessionState) {
     const fill = $(".fill")
     const aiFill = $(".ai_fill")
     const devloggedFill = $(".dev_logged")
-    const aiCut = $("ai_cut")
+    const aiCut = $(".ai_cut")
 
     if (fill) fill.style.height = `${progress}%`
     if (aiFill) { aiFill.style.bottom = `${progress}%`; aiFill.style.height = `${ai}%` }

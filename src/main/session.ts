@@ -94,7 +94,7 @@ async function connect() {
         if (!view) return
         receivedAt = Date.now()
         attempt = 0
-        setState("live", "", buildView(data))
+        setState("live", "", view)
     })
 
     roomHandler.onClose(code => {
