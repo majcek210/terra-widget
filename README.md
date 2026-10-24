@@ -31,6 +31,44 @@ The application is unsigned so a windows SmartScreen may display a warning when 
 
 Treat the token like a password and don't share it. When it expires the widget asks you to sign in again, just repeat these steps.
 
+# DOCS
+
+## USAGE GUIDE
+
+You can do folowing stuff from the tray:
+> - Quit (close the widget)
+> - Reconnect (Reconnect to terra)
+> - Settings (Opens the setting menu)
+
+In settings you can configure:
+> -  terra token(see the setup step for detailed instructions) | in order to communicate with terra servers.
+> -  Margin(X & Y) | is used to space the widget from the corners of your screen a bit.
+> -  Corner | is used to put a widget in a preset posiiton in one of the 4 corners of the screen.
+> -  Debug logging | something for the devs(even tho that the most of it isnt even implemented)
+> -  Widget size | is used to scale the widget if you prefer it bigger(the default is small-1x)
+
+## HOW IT ALL WORKS
+
+Most important part was the research in the first version of the app. I had to inspect traffic request and stuff. I alayzed them with them of an AI.
+
+So I have figured that terra runs on colyseus, which is a web multiplayer framework. When I looked in to it, I saw that they already have offical SDK. <br>
+For the point of this project, I decided to use a programming language typescript, as I have some expirience with it and colyseus SDK has good support on there. 
+You might ask why not javascript? Simple, I just prefer some type safety
+
+Then it came the hard part, authenticating with terra servers and joining the right rooms(worlds) while handling all the errors and redirects.
+As we figured out in research, we can use the browser dev tools and inspect the network request when you log in to terra. Thats how ge got the token,
+for the rooms it was simple just looked for the join word request and we had an ID.
+
+How did I connect it?
+
+Firstly before I even began doing any work on the widget, I built the room Handler that could be tested via cli. The handler handles the connection, redirect, island join, errors and whole data fetch logic. After this was done we acually started building the widget.
+
+At first I didn't know what framework to use in order to make a desktop widget as I haven't made any before, so I asked claude. I was recommended to use electron with vite and so here I am.
+It took a lot of time to learn it a bit, but there is still a lot I don't know. 
+
+Assets/designs are bad, as im horible at designing stuff xd.
+
+
 ## Building it yourself
 ```
 npm install

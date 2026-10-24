@@ -11,8 +11,9 @@ const marginX = $<HTMLInputElement>("margin_x")
 const marginY = $<HTMLInputElement>("margin_y")
 const cornerField = $<HTMLInputElement>("corner")
 const debug = $<HTMLInputElement>("debug")
-const message = $("message")
-
+const message = $<HTMLElement>("message")
+const size = $<HTMLInputElement>("size")
+const size_label = $<HTMLElement>("size_label")
 const closeSettings = $<HTMLInputElement>("close_settings")
 
 function say(text: string, error = false) {
@@ -37,6 +38,11 @@ async function load() {
     marginY.value = String(data.settings.marginY)
     debug.checked = data.settings.debug
     cornerField.value = data.settings.corner
+
+
+    size_label.textContent = `Widget size (${data.settings.size}x)`
+    size.value = String(data.settings.size)
+
     showToken(data.token)
 }
 
@@ -75,6 +81,10 @@ tokenClear.addEventListener("click", () => {
     })
 })
 
+size.addEventListener("input", () => {
+    size_label.textContent = `Widget size (${size.value}x)`
+})
+
 settingsForm.addEventListener("submit", e => {
     e.preventDefault()
     void busy(settingsForm, async () => {
@@ -88,7 +98,7 @@ settingsForm.addEventListener("submit", e => {
             return
         }
 
-        const r = await window.terraSettings.update({ marginX: x, marginY: y, debug: debug.checked, corner: cornerValue})
+        const r = await window.terraSettings.update({ marginX: x, marginY: y, debug: debug.checked, corner: cornerValue, size: Number(size.value)})
         if (!r || !r.success) {
             say(r ? r.error : "Could not save", true)
             return

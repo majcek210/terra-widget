@@ -6,27 +6,37 @@ import type { Settings, corner } from "../lib/types";
 import { start, stop, getState, onState } from "./session"
 import { createTray } from "./tray"
 import electronUpdater from "electron-updater";
+import path from "path"
+import { nativeImage } from "electron";
 
 const { autoUpdater } = electronUpdater
 
 import { saveToken, clearToken, tokenInfo } from "./secrets"
 
-const WIDGET_SIZE = { width: 170, height: 350 }
+const BASE_WIDGET_SIZE = { width: 170, height: 150 }
+
+const iconPath = app.isPackaged
+        ? path.join(process.resourcesPath, "icon.ico")
+        : path.join(app.getAppPath(), "src", "assets", "icon.ico");
+
+const icon = nativeImage.createFromPath(iconPath);
 
 
-function widgetPosition(corner:corner,marginX: number, marginY: number) {
+function widgetPosition(corner:corner,marginX: number, marginY: number, width: number, height: number) {
     const { workArea } = screen.getPrimaryDisplay()
 
     const isRight = corner.endsWith("right")
     const isBottom = corner.startsWith("bottom")
 
     return {
-        x: isRight ? (workArea.x + workArea.width - WIDGET_SIZE.width - marginX) : workArea.x + marginX,
-        y: isBottom ? workArea.y + workArea.height - WIDGET_SIZE.height - marginY : workArea.y + marginY
+        x: isRight ? (workArea.x + workArea.width - width - marginX) : workArea.x + marginX,
+        y: isBottom ? workArea.y + workArea.height - height - marginY : workArea.y + marginY
     }
 }
 
-function createWindow(corner: corner,marginX: number, marginY: number) {
+function createWindow(corner: corner,marginX: number, marginY: number, size: number) {
+
+    const WIDGET_SIZE = { width: Math.round(BASE_WIDGET_SIZE.width * size), height: Math.round(BASE_WIDGET_SIZE.height * size)}
 
     const win = new BrowserWindow({
         ...WIDGET_SIZE,
@@ -39,7 +49,7 @@ function createWindow(corner: corner,marginX: number, marginY: number) {
         alwaysOnTop: true,
         transparent: true,
 
-        ...widgetPosition(corner,marginX, marginY),
+        ...widgetPosition(corner,marginX, marginY, WIDGET_SIZE.width, WIDGET_SIZE.height),
 
         webPreferences: {
             nodeIntegration: false,
@@ -51,7 +61,11 @@ function createWindow(corner: corner,marginX: number, marginY: number) {
         
     });
 
-    
+    win.setIgnoreMouseEvents(true)
+
+    win.webContents.on("did-finish-load", () => win.webContents.setZoomFactor(size))
+    win.webContents.setZoomFactor(size)
+
     if (process.env.ELECTRON_RENDERER_URL) {
         void win.loadURL(process.env.ELECTRON_RENDERER_URL);
     } else {
@@ -82,10 +96,16 @@ export function openSettingsWindow() {
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
+            partition: "settings",
             sandbox: false,
             preload: fileURLToPath(new URL("../preload/index.mjs", import.meta.url))
         }
     })
+
+    if (!icon.isEmpty()) {
+        settingsWindow.setIcon(icon)
+    }
+    
     if (process.env.ELECTRON_RENDERER_URL) {
         void settingsWindow.loadURL(`${process.env.ELECTRON_RENDERER_URL}/settings.html`)
     } else {
@@ -115,7 +135,7 @@ app.whenReady().then(async () => {
     if (app.isPackaged) {
         autoUpdater.on("update-available", () => {
             if (process.env.PORTABLE_EXECUTABLE_FILE) {
-                shell.openExternal("https://github.com/majcek210/terra-widget/release")
+                shell.openExternal("https://github.com/majcek210/terra-widget/releases")
             }
         })
         autoUpdater.checkForUpdatesAndNotify()
@@ -175,14 +195,31 @@ app.whenReady().then(async () => {
 
 
 
-    widgetWindow = createWindow(settings.corner,settings.marginX, settings.marginY)
+    widgetWindow = createWindow(settings.corner,settings.marginX, settings.marginY, settings.size)
 
     
 
     onSettingsChanged(s => {
         if (widgetWindow.isDestroyed()) return
-        const { x, y } = widgetPosition(s.corner,s.marginX, s.marginY)
-        widgetWindow.setPosition(x, y)
+
+        const width = Math.round(BASE_WIDGET_SIZE.width * s.size)
+        const height = Math.round(BASE_WIDGET_SIZE.height * s.size)
+
+        const { x, y } = widgetPosition(
+            s.corner,
+            s.marginX,
+            s.marginY,
+            width,
+            height
+        )
+
+        widgetWindow.setBounds({
+            x,
+            y,
+            width,
+            height
+        })
+        widgetWindow.webContents.setZoomFactor(s.size)
     })
 
     onState(s => {
