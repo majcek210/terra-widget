@@ -1,9 +1,10 @@
-import { app, BrowserWindow, screen, ipcMain } from "electron";
+import { app, BrowserWindow, screen, ipcMain} from "electron";
 import type { IpcMainInvokeEvent } from "electron";
 import { fileURLToPath } from "node:url";
 import { loadSettings, getSettings, updateSettings, onSettingsChanged } from "./settings";
 import type { Settings, corner } from "../lib/types";
 import { start, stop, getState, onState } from "./session"
+import { createTray } from "./tray"
 
 import { saveToken, clearToken, tokenInfo } from "./secrets"
 
@@ -63,7 +64,7 @@ function createWindow(corner: corner,marginX: number, marginY: number) {
 
 let settingsWindow: BrowserWindow | null = null
 
-function openSettingsWindow() {
+export function openSettingsWindow() {
     if (settingsWindow && !settingsWindow.isDestroyed()) {
         settingsWindow.focus()
         return
@@ -96,7 +97,16 @@ function fromSettings(event: IpcMainInvokeEvent) {
 }
 
 
+const isSingleInstance = await app.requestSingleInstanceLock()
+if (!isSingleInstance) {
+    app.exit(0)
+    
+}
 
+ 
+
+
+let widgetWindow: BrowserWindow 
 app.whenReady().then(async () => {
     await loadSettings()
     
@@ -130,10 +140,6 @@ app.whenReady().then(async () => {
         settingsWindow?.destroy()
     })
 
-    ipcMain.handle("settings:close-widget", async (event) => {
-        if (!fromSettings(event)) return
-        app.quit()
-    })
 
     ipcMain.handle("token:save", async (event, raw: unknown) => {
         if (!fromSettings(event)) return null
@@ -156,7 +162,9 @@ app.whenReady().then(async () => {
 
 
 
-    const widgetWindow = createWindow(settings.corner,settings.marginX, settings.marginY)
+    widgetWindow = createWindow(settings.corner,settings.marginX, settings.marginY)
+
+    
 
     onSettingsChanged(s => {
         if (widgetWindow.isDestroyed()) return
@@ -169,8 +177,24 @@ app.whenReady().then(async () => {
             if(!w.isDestroyed()) w.webContents.send("state:push", s)
         }
     })
+
+    await createTray(app)
+
+   
+
     void start()
 });
+
+app.on("before-quit", async () => {
+    await stop()
+})
+
+app.on("second-instance", () => {
+    if (!widgetWindow || (widgetWindow && widgetWindow.isDestroyed())) return
+    widgetWindow.show();
+    openSettingsWindow()
+})
+
 
 
 

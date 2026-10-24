@@ -1,3 +1,4 @@
+/// <reference types="electron-vite/node" />
 import type { SessionState, Settings, TokenInfo, settingsUpdateResult, SettingsPatch } from "../lib/types"
 
 declare global {

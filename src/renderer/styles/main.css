@@ -115,27 +115,13 @@ body {
     font-size: .9em;
 }
 
-.more_button {
-    font-size: .6em;
-    font-family: var(--game-font, "Pleasurize", cursive);
-    color: #93582c;
-    paint-order: stroke fill;
-    -webkit-text-stroke: 2px #f9e6ce;
-    letter-spacing: .03em;
-    white-space: nowrap;
-    flex-direction: column;
-    gap: .010em;
-    display: flex;
-    flex: none;
-    margin-top: 10px;
-    width: max-content;
-}
-
 #status {
     padding-bottom: 10px;
     font-family: var(--game-font, "Pleasurize", cursive);
     color: #93582c;
 }
+
+
 
 @media (width <= 500px) {
     .main_progress_container {

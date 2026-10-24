@@ -123,3 +123,36 @@ button:focus-visible {
     display: inline-block;
     padding-bottom: 15px;
 }
+
+.token_label {
+    display: flex;
+}
+
+.token_label .icon {
+    padding-right: 0px;
+}
+
+.token_label .icon:hover {
+    color:#c7793c
+}
+.token_label .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #c7793c;
+    color: #ffffff;
+    text-align: center;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    border: 2px solid #462114;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 2px 3px 0 #3b1900;
+    font: inherit;
+    font-weight: 600;
+}
+
+.token_label div:hover .tooltiptext {
+  visibility: visible;
+}

@@ -44,7 +44,13 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
-    }
+    },
+    "extraResources": [
+      {
+        "from": "src/assets/icon.ico",
+        "to": "icon.ico"
+      }
+    ]
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

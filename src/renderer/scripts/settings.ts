@@ -14,7 +14,6 @@ const debug = $<HTMLInputElement>("debug")
 const message = $("message")
 
 const closeSettings = $<HTMLInputElement>("close_settings")
-const closeWidget = $<HTMLInputElement>("close_widget")
 
 function say(text: string, error = false) {
     message.textContent = text
@@ -96,13 +95,6 @@ settingsForm.addEventListener("submit", e => {
         }
         say("Saved")
         await load()
-    })
-})
-
-closeWidget.addEventListener("click", e => {
-    e.preventDefault()
-    void busy(tokenForm, async () => {
-        await window.terraSettings.closeWidget()
     })
 })
 
