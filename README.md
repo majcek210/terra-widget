@@ -12,11 +12,11 @@ You computer will probably block the exe from running. To unblock it: Right-clic
 # Setup
 1. Grab the latest exe from [Releases](https://github.com/majcek210/terra-widget/releases). `Terra.Widget.Setup.x.x.x.exe` installs it, `Terra.Widget.x.x.x.exe` is portable and just runs.
 2. Windows will probably say "Windows protected your PC" because the exe isn't signed. Click **More info** and then **Run anyway**.
-3. The widget sits in the bottom left corner of your screen. It has no taskbar icon, so look for it there.
-4. Click **More**, paste your Terra token (see below) and hit **Save token**. You can move the widget with the margins in the same window.
+3. The widget sits in one of the corners of your screen. It has no taskbar icon, so you will need to find it in the tray.
+4. If you click the terra widget tray icon directly it will take you to settings, right right clicking it you can also quit and reconnect. In the settings , paste your Terra token (see below) and hit **Save token**. You can move the widget with the margins in the same window.
 Your token is saved encrypted on your PC (only your Windows account can read it) and is only sent to Terra.
 
-#Windows installation and updates
+# Windows installation and updates
 Terra Widget supports automatic updates when installed with **NSIS installer**.
 Portable builds do not install updates automaticlly. Download the latest version from the GitHub Releases. 
 The application is unsigned so a windows SmartScreen may display a warning when you download or run a release.
