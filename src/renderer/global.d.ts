@@ -15,6 +15,7 @@ declare global {
       clearToken(): Promise<boolean>
       closeSettings(): Promise<void>
       closeWidget(): Promise<void>
+      getDisplays(): Promise<{ id: number; label: string }[]>
     }
   }
 }

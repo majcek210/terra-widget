@@ -46,6 +46,7 @@ In settings you can configure:
 > -  Corner | is used to put a widget in a preset posiiton in one of the 4 corners of the screen.
 > -  Debug logging | something for the devs(even tho that the most of it isnt even implemented)
 > -  Widget size | is used to scale the widget if you prefer it bigger(the default is small-1x)
+> -  Screen | screen which the widget will use
 
 ## HOW IT ALL WORKS
 
@@ -77,7 +78,7 @@ npm run dist   # build both exes into release/
 ```
 
 # AI usage
-AI was used to make the settings page(**ONLY** html and css) cause im pretty bad at designing. It was also used to checkup the security before shiping and a bit of ai code was produced here to keep it secure.
+AI was used to make the settings page(**ONLY** html and css) cause im pretty bad at designing. It was also used to checkup the security before shiping and a bit of ai code was produced here to keep it secure. Also a bit was used for debugging.
 
 # a small note
 Note to the reviewers: Comments are for my better understanding and not from ai code (:

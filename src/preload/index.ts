@@ -20,6 +20,7 @@ contextBridge.exposeInMainWorld("terraSettings", {
     saveToken: (raw: string): Promise<{ ok: boolean; reason?: string } | null> => ipcRenderer.invoke("token:save", raw),
     clearToken: (): Promise<boolean> => ipcRenderer.invoke("token:clear"),
     closeSettings: () => ipcRenderer.invoke("settings:close"),
+    getDisplays: (): Promise<{id: number; label:string}[]> => ipcRenderer.invoke("settings:getDisplays")
 })
 
 export {};
