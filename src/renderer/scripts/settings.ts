@@ -14,6 +14,7 @@ const debug = $<HTMLInputElement>("debug")
 const message = $<HTMLElement>("message")
 const size = $<HTMLInputElement>("size")
 const size_label = $<HTMLElement>("size_label")
+const display = $<HTMLSelectElement>("display")
 const closeSettings = $<HTMLInputElement>("close_settings")
 
 function say(text: string, error = false) {
@@ -34,11 +35,28 @@ async function load() {
         say("Could not load settings", true)
         return
     }
+    
     marginX.value = String(data.settings.marginX)
     marginY.value = String(data.settings.marginY)
     debug.checked = data.settings.debug
     cornerField.value = data.settings.corner
 
+    const displays = await window.terraSettings.getDisplays()
+
+    display.replaceChildren(
+        ...displays.map(d => {
+            const option = document.createElement("option")
+            option.value = String(d.id)
+            option.textContent = d.label
+            return option
+        })
+    )
+
+    display.value = String(data.settings.displayId)
+
+    if (!displays.some(d => d.id === data.settings.displayId)) {
+        display.value = String(displays.find(d => d.label.includes("(Primary)"))?.id?? displays[0]?.id?? "") // hard one
+    }
 
     size_label.textContent = `Widget size (${data.settings.size}x)`
     size.value = String(data.settings.size)
@@ -98,7 +116,10 @@ settingsForm.addEventListener("submit", e => {
             return
         }
 
-        const r = await window.terraSettings.update({ marginX: x, marginY: y, debug: debug.checked, corner: cornerValue, size: Number(size.value)})
+        const sizeValue = size.valueAsNumber
+
+        const displayId = Number(display.value)
+        const r = await window.terraSettings.update({ marginX: x, marginY: y, debug: debug.checked, corner: cornerValue, size: sizeValue, displayId: displayId})
         if (!r || !r.success) {
             say(r ? r.error : "Could not save", true)
             return

@@ -22,8 +22,9 @@ const iconPath = app.isPackaged
 const icon = nativeImage.createFromPath(iconPath);
 
 
-function widgetPosition(corner:corner,marginX: number, marginY: number, width: number, height: number) {
-    const { workArea } = screen.getPrimaryDisplay()
+function widgetPosition(corner:corner,marginX: number, marginY: number, width: number, height: number, displayId: number) {
+    const targetDisplay = screen.getAllDisplays().find(d => d.id === displayId) ?? screen.getPrimaryDisplay()
+    const { workArea } = targetDisplay
 
     const isRight = corner.endsWith("right")
     const isBottom = corner.startsWith("bottom")
@@ -34,7 +35,7 @@ function widgetPosition(corner:corner,marginX: number, marginY: number, width: n
     }
 }
 
-function createWindow(corner: corner,marginX: number, marginY: number, size: number) {
+function createWindow(corner: corner,marginX: number, marginY: number, size: number, displayId: number) {
 
     const WIDGET_SIZE = { width: Math.round(BASE_WIDGET_SIZE.width * size), height: Math.round(BASE_WIDGET_SIZE.height * size)}
 
@@ -49,7 +50,7 @@ function createWindow(corner: corner,marginX: number, marginY: number, size: num
         alwaysOnTop: true,
         transparent: true,
 
-        ...widgetPosition(corner,marginX, marginY, WIDGET_SIZE.width, WIDGET_SIZE.height),
+        ...widgetPosition(corner,marginX, marginY, WIDGET_SIZE.width, WIDGET_SIZE.height, displayId),
 
         webPreferences: {
             nodeIntegration: false,
@@ -126,6 +127,7 @@ if (!isSingleInstance) {
     
 }
 
+
  
 
 
@@ -173,6 +175,14 @@ app.whenReady().then(async () => {
         settingsWindow?.destroy()
     })
 
+    ipcMain.handle("settings:getDisplays", async event => {
+        if (!fromSettings(event)) return null
+        return screen.getAllDisplays().map((display, index) => ({
+            id: display.id,
+            label: `Display ${index + 1}${display.id === screen.getPrimaryDisplay().id ? " (Primary)" : ""}`
+        }))
+    })
+
 
     ipcMain.handle("token:save", async (event, raw: unknown) => {
         if (!fromSettings(event)) return null
@@ -195,7 +205,7 @@ app.whenReady().then(async () => {
 
 
 
-    widgetWindow = createWindow(settings.corner,settings.marginX, settings.marginY, settings.size)
+    widgetWindow = createWindow(settings.corner,settings.marginX, settings.marginY, settings.size, settings.displayId)
 
     
 
@@ -210,7 +220,8 @@ app.whenReady().then(async () => {
             s.marginX,
             s.marginY,
             width,
-            height
+            height,
+            s.displayId
         )
 
         widgetWindow.setBounds({

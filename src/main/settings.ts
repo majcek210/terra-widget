@@ -13,6 +13,7 @@ const DEFAULT_SETTINGS: Settings = {
     debug: false,
     corner: "bottom-left",
     size: 1,
+    displayId: 0
 }
 
 const MAX_MARGIN = 300
@@ -47,6 +48,10 @@ function validate(input: any) : Settings {
 
     if (typeof input?.size === "number" && Number.isFinite(input.size)) {
         settings.size = Math.max(1, Math.min(MAX_SIZE, input.size))
+    }
+
+    if (typeof input?.displayId === "number" && input.displayId >= 0) {
+        settings.displayId = input.displayId
     }
 
     return settings
@@ -115,7 +120,7 @@ export async function updateSettings(patch: Partial<Settings>): Promise<settings
         return { success: false, error: "Invalid patch" }
     }
 
-    const allowedPatches = ["marginX", "marginY", "debug", "version", "corner", "size"]
+    const allowedPatches = ["marginX", "marginY", "debug", "version", "corner", "size", "displayId"]
     const updated = { ...currentSettings }
 
     for (const [key, value] of Object.entries(patch)) {
@@ -149,6 +154,10 @@ export async function updateSettings(patch: Partial<Settings>): Promise<settings
                 if (value < 1 || value > MAX_SIZE) return { success: false, error: "Size is too big or small." }
 
                 updated.size = value
+                break
+            case "displayId":
+                if (typeof value !== "number" || !Number.isSafeInteger(value) || value < 0) return { success: false, error: "invalid display data"}
+                updated.displayId = value
                 break
             }
     }

@@ -29,7 +29,8 @@ export interface Settings {
     marginY: number,
     debug: boolean,
     corner: corner,
-    size: number
+    size: number,
+    displayId: number
 }
 
 export interface roomConnections {
@@ -40,7 +41,7 @@ export interface roomConnections {
 }
 
 export type settingsUpdateResult = | { success: true; settings: Settings } | { success: false, error: string }
-export type SettingsPatch = Partial<Pick<Settings, "marginX" | "marginY" | "debug" | "corner" | "size">>
+export type SettingsPatch = Partial<Pick<Settings, "marginX" | "marginY" | "debug" | "corner" | "size" | "displayId">>
 export type settingsLisener = (settings: Settings) => void
 
 export type checkResult = { ok: true; expiresAt: number | null } | { ok: false; reason: string }
