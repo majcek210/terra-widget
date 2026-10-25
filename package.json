@@ -23,7 +23,8 @@
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
     "build": "electron-vite build",
-    "dist": "electron-vite build && electron-builder --win"
+    "dist:windows": "electron-vite build && electron-builder --win --publish never",
+    "dist:linux": "electron-vite build && electron-builder --linux --publish never"
   },
   "build": {
     "appId": "com.majcek210.terrawidget",
@@ -41,6 +42,14 @@
         "portable"
       ]
     },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "icon": "src/assets/icon-512.png",
+      "category": "Utility",
+      "maintainer": "majcek210 <maj.plenjsek@hotmail.com>",
+      "executableArgs": ["--ozone-platform=x11"],
+      "artifactName": "${name}-${version}-${arch}.${ext}"
+    },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
@@ -54,6 +63,10 @@
       {
         "from": "src/assets/icon.ico",
         "to": "icon.ico"
+      },
+      {
+        "from": "src/assets/icon-512.png",
+        "to": "icon-512.png"
       }
     ]
   },

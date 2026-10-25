@@ -14,7 +14,7 @@ export function buildView(data: hoursUpdateData, receivedAt: number = Date.now()
 
     return {
         weekKey: String(d.weekKey ?? ""),
-        percent: goal > 0 ? (credited / goal) * 100 : 0,
+        percent: goal > 0 ? ((credited   - aiCredited) / goal) * 100 : 0,
         // this 2 not done yet
         devLoggedPercent: goal > 0 ? (credited / goal) * 100 : 0,
         aiPercent: goal > 0 ? (aiCredited / goal) * 100 : 0,
