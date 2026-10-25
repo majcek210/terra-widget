@@ -10,6 +10,7 @@ export function buildView(data: hoursUpdateData, receivedAt: number = Date.now()
     const goal = num(d.goalSeconds)
     const credited = num(d.week.creditedSeconds)
     const aiCredited = num(d.week.aiCreditedSeconds)
+    const unclaimedSeconds = num(d.unclaimed.creditedSeconds)
 
     return {
         weekKey: String(d.weekKey ?? ""),
@@ -23,6 +24,7 @@ export function buildView(data: hoursUpdateData, receivedAt: number = Date.now()
         remainingSeconds: Math.max(0, goal - credited),
         visible: d.visible !== false,
         computedAt: d.computedAt ?? null,
+        unclaimedSeconds,
         receivedAt,
     }
 }   

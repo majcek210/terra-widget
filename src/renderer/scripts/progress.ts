@@ -78,6 +78,7 @@ export function render(s: SessionState) {
     if (devloggedFill) devloggedFill.style.height = `${devlogged}%`
     if (aiCut) aiCut.style.bottom = `${progress + ai}%`
 
+    setText(".not_claimed",`${hm(values.unclaimedSeconds)} not claimed.`)
     setText(".procentage_value", `${Math.round(progress)}%`)
     setText(".total_hours", `Total hours: ${hm(values.creditedSeconds)}`)
 }

@@ -68,4 +68,5 @@ export type View = {
     visible: boolean
     computedAt: unknown
     receivedAt: number
+    unclaimedSeconds: number
 }

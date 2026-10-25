@@ -118,6 +118,10 @@ body {
     font-size: .9em;
 }
 
+.not_claimed {
+    font-size: .5em;
+}
+
 #status {
     padding-bottom: 10px;
     font-family: var(--game-font, "Pleasurize", cursive);
