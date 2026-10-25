@@ -23,6 +23,7 @@ The application is unsigned so a windows SmartScreen may display a warning when 
 
 # Linux installation and guide
 **LINUX SUPPORT HAS NOT BEEN OFFICIALLY TESTED**
+Expect bugs/crashes/errors on linux
 
 - **AppImage**: download it, `chmod +x terra-widget-*.AppImage`, run it. Updates install automatically.
   Needs FUSE 2 (`sudo apt install libfuse2` on Ubuntu 22.04+).
