@@ -102,11 +102,14 @@ body {
     line-height: 1.1;
 }
 
-.label_goal {
-    font-size: 1.2em;
-}
+
+.label_goal
 .total_hours {
     font-size: 1em;
+}
+
+.is_stale {
+    font-size: 0.5em;
 }
 
 
