@@ -21,6 +21,21 @@ Terra Widget supports automatic updates when installed with **NSIS installer**.
 Portable builds do not install updates automaticlly. Download the latest version from the GitHub Releases. 
 The application is unsigned so a windows SmartScreen may display a warning when you download or run a release.
 
+# Linux installation and guide
+**LINUX SUPPORT HAS NOT BEEN OFFICIALLY TESTED**
+
+- **AppImage**: download it, `chmod +x terra-widget-*.AppImage`, run it. Updates install automatically.
+  Needs FUSE 2 (`sudo apt install libfuse2` on Ubuntu 22.04+).
+- **.deb** (Ubuntu/Debian): `sudo apt install ./terra-widget-*.deb`. Updates: download the new .deb from Releases.
+- **GNOME** has no tray by default. Install the "AppIndicator and KStatusNotifierItem Support"
+  extension (Ubuntu already has it), or launch Terra Widget again to open Settings.
+- Your token is stored in the system keyring (GNOME Keyring / KWallet). Without a keyring it is
+  only kept until you quit.
+- If the AppImage won't start on Ubuntu 24.04+ with a sandbox error, use the .deb,
+  or run it with `--no-sandbox`.
+
+For the tray to work you will need AppIndicator and KStatusNotifierItem Support extensions. If you do not wish to use the tray you can reopen the widget app once more and that will bring you up the settings.
+
 
 ## Getting your token
 1. Open [terra.hackclub.com](https://terra.hackclub.com) in your browser and press **F12** to open DevTools.

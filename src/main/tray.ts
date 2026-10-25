@@ -2,6 +2,7 @@ import { Tray, Menu, App, nativeImage} from "electron";
 import { retry, onState } from "./session";
 import { openSettingsWindow } from ".";
 import path from "path";
+import { trayIcon, iconPath } from "./icon";
 
 let tray: Tray | null = null;
 
@@ -10,17 +11,14 @@ let tray: Tray | null = null;
 
 export async function createTray(app : App) {
 
-    const iconPath = app.isPackaged
-        ? path.join(process.resourcesPath, "icon.ico")
-        : path.join(app.getAppPath(), "src", "assets", "icon.ico");
 
-    const image = nativeImage.createFromPath(iconPath);
+    const image = trayIcon()
     if (image.isEmpty()) {
         console.error("Tray icon failed to load:", iconPath);
         return;
     }
 
-    tray = new Tray(iconPath);
+    tray = new Tray(image);
 
     const contextMenu = Menu.buildFromTemplate([
         {

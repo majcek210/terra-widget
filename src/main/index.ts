@@ -6,8 +6,7 @@ import type { Settings, corner } from "../lib/types";
 import { start, stop, getState, onState } from "./session"
 import { createTray } from "./tray"
 import electronUpdater from "electron-updater";
-import path from "path"
-import { nativeImage } from "electron";
+import { appIcon } from "./icon"
 
 const { autoUpdater } = electronUpdater
 
@@ -15,11 +14,12 @@ import { saveToken, clearToken, tokenInfo } from "./secrets"
 
 const BASE_WIDGET_SIZE = { width: 170, height: 150 }
 
-const iconPath = app.isPackaged
-        ? path.join(process.resourcesPath, "icon.ico")
-        : path.join(app.getAppPath(), "src", "assets", "icon.ico");
+const icon = appIcon()
 
-const icon = nativeImage.createFromPath(iconPath);
+
+if (process.platform === "linux") {
+    app.commandLine.appendSwitch("ozone-platform", "x11")
+}
 
 
 function widgetPosition(corner:corner,marginX: number, marginY: number, width: number, height: number, displayId: number) {
@@ -128,7 +128,7 @@ if (!isSingleInstance) {
 }
 
 
- 
+
 
 
 let widgetWindow: BrowserWindow 
@@ -136,7 +136,9 @@ app.whenReady().then(async () => {
 
     if (app.isPackaged) {
         autoUpdater.on("update-available", () => {
-            if (process.env.PORTABLE_EXECUTABLE_FILE) {
+            const isPortableWin = !!process.env.PORTABLE_EXECUTABLE_FILE
+            const isLinuxNoAppImage = process.platform === "linux" && !process.env.APPIMAGE
+            if (isPortableWin ||isLinuxNoAppImage) {
                 shell.openExternal("https://github.com/majcek210/terra-widget/releases")
             }
         })
@@ -204,7 +206,9 @@ app.whenReady().then(async () => {
 
 
 
-
+    if (process.platform === "linux") {
+        await new Promise(r => setTimeout(r, 300))
+    }
     widgetWindow = createWindow(settings.corner,settings.marginX, settings.marginY, settings.size, settings.displayId)
 
     

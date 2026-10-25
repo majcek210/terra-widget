@@ -25,6 +25,13 @@ function clean(raw:string) : string | null {
     return token
 
 }
+
+function canEncrypt() {
+    if (!safeStorage.isAsyncEncryptionAvailable()) return false
+    if (process.platform === "linux" && safeStorage.getSelectedStorageBackend() === "basic_text") return false
+    return true
+}
+
 function readExp(token:string): ExpResult {
     const parts = token.split(".")
     if (parts.length !== 3) return { ok: false, reason: "not-a-jwt"}
@@ -62,7 +69,7 @@ export async function saveToken(raw: string) {
     if (!checked.ok) return checked
 
     cached = token;
-    if(!safeStorage.isEncryptionAvailable()) return {ok: true, saved: false, expiresAt: checked.expiresAt }
+    if (!canEncrypt()) return { ok: true, saved: false, expiresAt: checked.expiresAt }
 
     const tmp = file() + ".tmp"
     try {
