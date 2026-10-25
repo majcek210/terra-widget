@@ -15,16 +15,48 @@ const STATUS_TEXT: Record<Status, string> = {
 }
 
 
+let latestState: SessionState | null = null
+
+const staleTreshhold = 10 * 60 * 1000
+const staleInterval = 30 * 1000
+
+
 function hm(seconds: number) {
     const h = Math.floor(seconds / 3600)
     const m = Math.floor((seconds % 3600) / 60)
     return `${h}h ${m}mins`
 }
 
+function formatStale(ms: number) : number {
+    return Math.floor(ms / 60000)
+}
+
+
+const checkForStale = () => {
+    let isStale = false
+    const view = latestState?.view
+    if (!view) {
+        return
+    } 
+
+    const staleLabel = $(".is_stale")
+    const old = Date.now() - view.receivedAt || 0
+
+    isStale = old > staleTreshhold
+    const staleFor = isStale ? old : 0
+
+    if (staleLabel) {
+        staleLabel.hidden = !isStale
+        if (isStale) {
+            staleLabel.textContent = `${formatStale(staleFor)}min ago`
+        }
+    }
+}
 
 
 
 export function render(s: SessionState) {
+    latestState = s
 
     document.body.classList.toggle("dim", s.status === "connecting" || s.status === "reconnecting")
     setText("#status", s.status === "error" ? s.message : STATUS_TEXT[s.status])
@@ -49,4 +81,9 @@ export function render(s: SessionState) {
     setText(".procentage_value", `${Math.round(progress)}%`)
     setText(".total_hours", `Total hours: ${hm(values.creditedSeconds)}`)
 }
+
+
+setInterval(() => {
+    checkForStale()
+}, staleInterval)
 

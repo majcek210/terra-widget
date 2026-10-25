@@ -9,13 +9,14 @@ export function buildView(data: hoursUpdateData, receivedAt: number = Date.now()
 
     const goal = num(d.goalSeconds)
     const credited = num(d.week.creditedSeconds)
+    const aiCredited = num(d.week.aiCreditedSeconds)
 
     return {
         weekKey: String(d.weekKey ?? ""),
         percent: goal > 0 ? (credited / goal) * 100 : 0,
         // this 2 not done yet
-        devLoggedPercent: 0,   
-        aiPercent: 0, 
+        devLoggedPercent: goal > 0 ? (credited / goal) * 100 : 0,
+        aiPercent: goal > 0 ? (aiCredited / goal) * 100 : 0,
         //         
         creditedSeconds: credited,
         goalSeconds: goal,
