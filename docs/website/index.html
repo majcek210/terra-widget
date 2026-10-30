@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+    <head lang="en-US">
+        <meta charset="UTF-8">
+        <meta name= "author" value="majcek210"
+        <link type="stylesheet" href="./css/index.css">
+        <link type="stylesheet" href="./css/navbar.css"
+    </head>
+    <body>
+        <div class="navbar">
+            <li class="title">Terra widget</li>
+            <li>Home</li>
+            <li>Installation</li>
+            <li>FAQ</li>
+        </div>
+        
+        <div class="about">
+            <h2>What even Terra widget is?</h2>
+            <p>Terra widget is a desktop application that was developer for the terra project.<br>A click thru widget that lives on a corner of your screen and shows your terrra water procentage! After you completed yozr goal it still shows ypu ttoal coding hours.</p>
+            <h2>Why should I use it?</h2>
+            <p>For me personaly its the best option to use while coding as then I don't need any websites open to track my progress and the widget is just there.<br> Terra tab disconected becaouse you were afk? The widget automaticly reconnects in AFK scenarios.</p>
+            <h2>Is it safe?</h2>
+            <p>The widget is completly safe and open source, if you want you can checkput the code yourself! Your session token isn't sent anywhere else than terra. It is stored encrypted if possible only on your your device. But if you leak your token by any chance, rotate your password ASAP</p>
+        </div>
+
+        <div class="use">
+            <h2>How do I use it?</h2>
+            <p>
+                Usage is really straight forward, after you installed the widget(please see the installtion tab) open the program. If your system has <b>Tray</b> support a icon will appear there.<br>
+                With a right click on the icon, you can: quit, reconnect and open settings. In case that your system does not have Tray suport, you can open the app again and a setting menu eill be automaticly shown<br>
+                In settings you can configure varius settings, such as the widget corner, size, disolay and more.
+                For inital setup please see the <b>token setup</b> part of the installtion
+            </p>
+        </div>
+        <div class="works">
+            <h2>How it all works</h2>
+            <div class="container">
+                <li>Project is written in typescript</li>
+                <li>A custom terra room handler is used make with colyseus sdk</li>
+                <li>The widget itself is made with electron and vite</li>
+                <li>After reciving the data thru SDK, the prigram displays it on HTML</li>
+            </div>
+        </div>
+        <footer>
+            Developed by @majcek210 on github. All open source (:
+        </footer>
+    </body>
+</html>
