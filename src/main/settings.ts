@@ -123,7 +123,7 @@ export async function updateSettings(patch: Partial<Settings>): Promise<settings
         return { success: false, error: "Invalid patch" }
     }
 
-    const allowedPatches = ["marginX", "marginY", "debug", "version", "corner", "size", "displayId"]
+    const allowedPatches = ["marginX", "marginY", "debug", "version", "corner", "size", "displayId", "transparency"]
     const updated = { ...currentSettings }
 
     for (const [key, value] of Object.entries(patch)) {

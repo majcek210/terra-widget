@@ -3,4 +3,6 @@ import { render } from "./progress"
 window.terra.getState().then(s => { if (s) render(s) }).catch(() => {})
 window.terra.onState(render)
 
-window.terraSettings.onTransparency(v => document.documentElement.style.setProperty("--bg-alpha", String(v)) )
+const applyTransparency = (t:Number) =>
+    document.documentElement.style.setProperty("--widget-opacity", String(1 - (Number(t))))
+window.terraSettings.onTransparency(applyTransparency)

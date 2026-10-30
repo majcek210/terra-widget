@@ -20,9 +20,11 @@ contextBridge.exposeInMainWorld("terraSettings", {
     saveToken: (raw: string): Promise<{ ok: boolean; reason?: string } | null> => ipcRenderer.invoke("token:save", raw),
     clearToken: (): Promise<boolean> => ipcRenderer.invoke("token:clear"),
     closeSettings: () => ipcRenderer.invoke("settings:close"),
-    getDisplays: (): Promise<{id: number; label:string}[]> => ipcRenderer.invoke("settings:getDisplays")
-    onTransparency: (cb: (v:number) => void) => {
-        ipcRenderer.on("settings:transparency", (_e, v) => cb(v))
+    getDisplays: (): Promise<{id: number; label:string}[]> => ipcRenderer.invoke("settings:getDisplays"),
+    onTransparency: (cb: (v: number) => void) => {
+        const handler = (_e: IpcRendererEvent, v: number) => cb(v)
+        ipcRenderer.on("settings:transparency", handler)
+        return () => { ipcRenderer.removeListener("settings:transparency", handler) }
     }
 })
 

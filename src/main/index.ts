@@ -64,7 +64,10 @@ function createWindow(corner: corner,marginX: number, marginY: number, size: num
 
     win.setIgnoreMouseEvents(true)
 
-    win.webContents.on("did-finish-load", () => win.webContents.setZoomFactor(size))
+    win.webContents.on("did-finish-load", () => {
+        win.webContents.setZoomFactor(size)
+        win.webContents.send("settings:transparency", getSettings().transparency)
+    })
     win.webContents.setZoomFactor(size)
 
     if (process.env.ELECTRON_RENDERER_URL) {
@@ -235,7 +238,7 @@ app.whenReady().then(async () => {
             height
         })
         widgetWindow.webContents.setZoomFactor(s.size)
-        widgetWindow.webContents.send("terraSettings:transparency", s)
+        widgetWindow.webContents.send("settings:transparency", s.transparency)
 
     })
 

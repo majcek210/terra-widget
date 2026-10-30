@@ -16,6 +16,7 @@ declare global {
       closeSettings(): Promise<void>
       closeWidget(): Promise<void>
       getDisplays(): Promise<{ id: number; label: string }[]>
+      onTransparency(cb: (s: number) => void): () => void
     }
   }
 }

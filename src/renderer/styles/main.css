@@ -13,6 +13,7 @@ body {
     gap: .61em;
     font-size: clamp(14px, 1.8vmin, 24px);
     display: flex;
+    opacity: var(--widget-opacity, 1);
 }
 
 .border_container {
