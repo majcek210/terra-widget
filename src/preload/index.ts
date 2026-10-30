@@ -21,6 +21,9 @@ contextBridge.exposeInMainWorld("terraSettings", {
     clearToken: (): Promise<boolean> => ipcRenderer.invoke("token:clear"),
     closeSettings: () => ipcRenderer.invoke("settings:close"),
     getDisplays: (): Promise<{id: number; label:string}[]> => ipcRenderer.invoke("settings:getDisplays")
+    onTransparency: (cb: (v:number) => void) => {
+        ipcRenderer.on("settings:transparency", (_e, v) => cb(v))
+    }
 })
 
 export {};

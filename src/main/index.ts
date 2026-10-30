@@ -235,6 +235,8 @@ app.whenReady().then(async () => {
             height
         })
         widgetWindow.webContents.setZoomFactor(s.size)
+        widgetWindow.webContents.send("terraSettings:transparency", s)
+
     })
 
     onState(s => {

@@ -16,6 +16,8 @@ const size = $<HTMLInputElement>("size")
 const size_label = $<HTMLElement>("size_label")
 const display = $<HTMLSelectElement>("display")
 const closeSettings = $<HTMLInputElement>("close_settings")
+const transparency = $<HTMLInputElement>("transparency")
+const transparency_label = $<HTMLElement>("transparency_label"
 
 function say(text: string, error = false) {
     message.textContent = text
@@ -61,6 +63,9 @@ async function load() {
     size_label.textContent = `Widget size (${data.settings.size}x)`
     size.value = String(data.settings.size)
 
+    transparency_label.textContent = `Transparency (${data.settings.transparency * 100}%)`
+    transparency.value = String(data.settings.transparency)
+    
     showToken(data.token)
 }
 
@@ -102,6 +107,9 @@ tokenClear.addEventListener("click", () => {
 size.addEventListener("input", () => {
     size_label.textContent = `Widget size (${size.value}x)`
 })
+transparency.addEventLisener("input", () => {
+    transparency_label.textContent = `Transparency (${transparency.value * 100}%)`
+})
 
 settingsForm.addEventListener("submit", e => {
     e.preventDefault()
@@ -117,9 +125,10 @@ settingsForm.addEventListener("submit", e => {
         }
 
         const sizeValue = size.valueAsNumber
-
+        const transparencyValue = size.valueAsNumber
+        
         const displayId = Number(display.value)
-        const r = await window.terraSettings.update({ marginX: x, marginY: y, debug: debug.checked, corner: cornerValue, size: sizeValue, displayId: displayId})
+        const r = await window.terraSettings.update({ marginX: x, marginY: y, debug: debug.checked, corner: cornerValue, size: sizeValue, displayId: displayId, transparency: transparencyValue})
         if (!r || !r.success) {
             say(r ? r.error : "Could not save", true)
             return
