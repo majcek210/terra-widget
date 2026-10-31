@@ -1,11 +1,17 @@
 import { app, safeStorage } from "electron"
 import { join } from "path"
-import { readFileSync, writeFile, writeFileSync, renameSync, existsSync, rmSync } from "fs"
+import { readFileSync, writeFileSync, renameSync, existsSync, rmSync } from "fs"
 import type { checkResult, ExpResult } from "./../lib/types"
-import { getSettings } from "./settings"
 
 const file = () => join(app.getPath("userData"), "token.bin")
-let cached: string | null = null 
+let cached: string | null = null
+let plainTextMode = false
+
+export function enablePlainTextStorage() {
+    if (process.platform !== "linux") return
+    safeStorage.setUsePlainTextEncryption(true)
+    plainTextMode = true
+}
 
 function clean(raw:string) : string | null {
     let token = raw.trim()
@@ -30,7 +36,7 @@ function clean(raw:string) : string | null {
 async function canEncrypt() {
     if (!(await safeStorage.isAsyncEncryptionAvailable())) return false
     if (process.platform === "linux" && safeStorage.getSelectedStorageBackend() === "basic_text") {
-        return getSettings().plainTextToken
+        return plainTextMode
     }
     return true
 }

@@ -1,7 +1,8 @@
 import type { SessionState, Status } from "../lib/types"
-import { powerMonitor, PowerMonitor } from "electron"
+import { powerMonitor } from "electron"
 import RoomHandler from "../lib/room"
 import { loadToken, tokenInfo, saveToken } from "./secrets"
+import { getSettings } from "./settings"
 
 import { silentRefresh, hasLoginSession } from "./tokenLogin"
 
@@ -21,7 +22,6 @@ let retryTimer: NodeJS.Timeout |null = null
 let stopping = false
 let generation = 0
 let resumeHooked = false
-let receivedAt = 0
 let lastRefresh = 0
 
 async function refreshToken(id:number): Promise<boolean> {
@@ -72,14 +72,10 @@ function scheduleRetry(reason: string) {
     void dropHandler()
 
     attempt += 1
-    if (attempt > MAX_ATTEMPTS) {
-        setState("error", `${reason}. Gave up after ${MAX_ATTEMPTS} tries.`)
-        return
-    }
-
-    const base = Math.min(60_000, 1000 * 2 ** (attempt -1))
+    const slow = attempt > MAX_ATTEMPTS
+    const base = slow ? 5 * 60_000 : Math.min(60_000, 1000 * 2 ** (attempt -1))
     const delay = Math.round(base + Math.random() * base * 0.25)
-    setState("reconnecting", `${reason}. Retrying in ${Math.round(delay / 1000)}s`)
+    setState(slow ? "error" : "reconnecting", `${reason}. Retrying in ${Math.round(delay / 1000)}s`)
 
     clearRetry()
     retryTimer = setTimeout(() => { void connect()}, delay)
@@ -108,14 +104,13 @@ async function connect() {
     
     setState("connecting", "")
 
-    const roomHandler = new RoomHandler(token, { debug: false})
+    const roomHandler = new RoomHandler(token, { debug: getSettings().debug })
     handler = roomHandler
 
     roomHandler.onHoursUpdate(data => {
         if (handler !== roomHandler) return
         const view = buildView(data, Date.now())
         if (!view) return
-        receivedAt = Date.now()
         attempt = 0
         setState("live", "", view)
     })

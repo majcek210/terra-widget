@@ -15,7 +15,7 @@ export function buildView(data: hoursUpdateData, receivedAt: number = Date.now()
     return {
         weekKey: String(d.weekKey ?? ""),
         percent: goal > 0 ? (credited / goal) * 100 : 0,
-        devLoggedPercent: goal > 0 ? (credited / goal) * 100 : 0,
+        devLoggedPercent: 0,
         aiPercent: goal > 0 ? (aiCredited / goal) * 100 : 0,
         creditedSeconds: credited,
         goalSeconds: goal,
@@ -25,15 +25,4 @@ export function buildView(data: hoursUpdateData, receivedAt: number = Date.now()
         unclaimedSeconds,
         receivedAt,
     }
-}   
-
-export function format(p: number): string {
-    return p.toFixed(2)
-}
-
-export function formatDuration(totalSeconds: number): string {
-  const s = Math.max(0, Math.floor(totalSeconds))
-  const h = Math.floor(s / 3600)
-  const m = Math.floor((s % 3600) / 60)
-  return h > 0 ? `${h}h ${m}m` : `${m}m ${s % 60}s`
 }

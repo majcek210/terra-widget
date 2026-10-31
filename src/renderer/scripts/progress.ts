@@ -33,30 +33,26 @@ function formatStale(ms: number) : number {
 
 
 const checkForStale = () => {
-    let isStale = false
+    const staleLabel = $(".is_stale")
+    if (!staleLabel) return
+
     const view = latestState?.view
     if (!view) {
+        staleLabel.hidden = true
         return
-    } 
-
-    const staleLabel = $(".is_stale")
-    const old = Date.now() - view.receivedAt || 0
-
-    isStale = old > staleTreshhold
-    const staleFor = isStale ? old : 0
-
-    if (staleLabel) {
-        staleLabel.hidden = !isStale
-        if (isStale) {
-            staleLabel.textContent = `${formatStale(staleFor)}min ago`
-        }
     }
+
+    const old = Date.now() - view.receivedAt
+    const isStale = old > staleTreshhold
+    staleLabel.hidden = !isStale
+    if (isStale) staleLabel.textContent = `${formatStale(old)}min ago`
 }
 
 
 
 export function render(s: SessionState) {
     latestState = s
+    checkForStale()
 
     document.body.classList.toggle("dim", s.status === "connecting" || s.status === "reconnecting")
     setText("#status", s.status === "error" ? s.message : STATUS_TEXT[s.status])

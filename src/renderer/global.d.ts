@@ -1,6 +1,5 @@
-import { ipcRenderer } from 'electron';
 /// <reference types="electron-vite/node" />
-import type { SessionState, Settings, TokenInfo, settingsUpdateResult, SettingsPatch } from "../lib/types"
+import type { SessionState, Settings, TokenInfo, settingsUpdateResult, SettingsPatch, TokenSaveResult, AutoStartResult } from "../lib/types"
 
 declare global {
   interface Window {
@@ -12,15 +11,14 @@ declare global {
     terraSettings: {
       get(): Promise<{ settings: Settings; token: TokenInfo } | null>
       update(patch: SettingsPatch): Promise<settingsUpdateResult | null>
-      saveToken(raw: string): Promise<{ ok: boolean; reason?: string } | null>
+      saveToken(raw: string): Promise<TokenSaveResult | null>
       clearToken(): Promise<boolean>
       closeSettings(): Promise<void>
-      closeWidget(): Promise<void>
       getDisplays(): Promise<{ id: number; label: string }[]>
       onTransparency(cb: (s: number) => void): () => void
-      login(): Promise<{ ok: boolean; reason?: string} | null >
+      login(): Promise<TokenSaveResult | null>
       getAutoStart(): Promise<boolean |null>
-      setAutoStart(on:boolean): Promise<boolean | null>
+      setAutoStart(on:boolean): Promise<AutoStartResult | null>
     }
   }
 }

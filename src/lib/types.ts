@@ -1,5 +1,5 @@
 export interface hoursUpdateData {
-   visibile: boolean,
+   visible: boolean,
    weekKey: string,
    goalSeconds: number,
    rentWeek: boolean,
@@ -32,8 +32,7 @@ export interface Settings {
     size: number,
     displayId: number,
     transparency: number,
-    plainTextToken: boolean,
-    autoStartUp: boolean
+    plainTextToken: boolean
 }
 
 export interface roomConnections {
@@ -44,8 +43,11 @@ export interface roomConnections {
 }
 
 export type settingsUpdateResult = | { success: true; settings: Settings } | { success: false, error: string }
-export type SettingsPatch = Partial<Pick<Settings, "marginX" | "marginY" | "debug" | "corner" | "size" | "displayId" | "transparency" | "plainTextToken" | "autoStartUp">>
+export type SettingsPatch = Partial<Pick<Settings, "marginX" | "marginY" | "debug" | "corner" | "size" | "displayId" | "transparency" | "plainTextToken">>
 export type settingsLisener = (settings: Settings) => void
+
+export type TokenSaveResult = { ok: boolean; saved?: boolean; reason?: string }
+export type AutoStartResult = { ok: boolean; enabled?: boolean; reason?: string }
 
 export type checkResult = { ok: true; expiresAt: number | null } | { ok: false; reason: string }
 export type ExpResult =  | {ok: true, expiresAt: number | null} | {ok: false, reason: "not-a-jwt" | "bad-payload"}

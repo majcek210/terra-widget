@@ -1,11 +1,9 @@
 // had to write this to test my room logic (:
-import { Room } from "@colyseus/sdk";
 import RoomHandler from "../lib/room";
-import { error } from "console";
 
 
 if (!process.env.TERRA_TOKEN) {
-    throw error("ENVS ARE NOT GOOD FOR TESTING")
+    throw new Error("ENVS ARE NOT GOOD FOR TESTING")
 }
 const RoomMain = new RoomHandler(process.env.TERRA_TOKEN, {debug: true})
 

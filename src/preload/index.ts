@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { IpcRendererEvent } from "electron";
-import type { SessionState , Settings, TokenInfo, settingsUpdateResult, SettingsPatch } from "../lib/types"
+import type { SessionState , Settings, TokenInfo, settingsUpdateResult, SettingsPatch, TokenSaveResult, AutoStartResult } from "../lib/types"
 
 
 
@@ -17,7 +17,7 @@ contextBridge.exposeInMainWorld("terra", {
 contextBridge.exposeInMainWorld("terraSettings", {
     get: (): Promise<{ settings: Settings; token: TokenInfo } | null> => ipcRenderer.invoke("settings:get"),
     update: (patch: SettingsPatch): Promise<settingsUpdateResult | null> => ipcRenderer.invoke("settings:update", patch),
-    saveToken: (raw: string): Promise<{ ok: boolean; reason?: string } | null> => ipcRenderer.invoke("token:save", raw),
+    saveToken: (raw: string): Promise<TokenSaveResult | null> => ipcRenderer.invoke("token:save", raw),
     clearToken: (): Promise<boolean> => ipcRenderer.invoke("token:clear"),
     closeSettings: () => ipcRenderer.invoke("settings:close"),
     getDisplays: (): Promise<{id: number; label:string}[]> => ipcRenderer.invoke("settings:getDisplays"),
@@ -26,10 +26,10 @@ contextBridge.exposeInMainWorld("terraSettings", {
         ipcRenderer.on("settings:transparency", handler)
         return () => { ipcRenderer.removeListener("settings:transparency", handler) }
     },
-    login: (): Promise<{ ok: boolean, reason?:string} | null> => ipcRenderer.invoke("token:login"),
+    login: (): Promise<TokenSaveResult | null> => ipcRenderer.invoke("token:login"),
 
     getAutoStart: (): Promise<boolean | null> => ipcRenderer.invoke("autostart:get"),
-    setAutoStart: (state:boolean): Promise<boolean | null> => ipcRenderer.invoke("autostart:set", state)
+    setAutoStart: (state:boolean): Promise<AutoStartResult | null> => ipcRenderer.invoke("autostart:set", state)
 })
 
 export {};

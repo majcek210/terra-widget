@@ -131,6 +131,7 @@ export default class RoomHandler {
             await room.leave(true)
             this.debug(`hop ${this.hops}: joining ${msg.levelId}`)
             await this.join(msg.levelId, { farmOwnerId: msg.farmOwnerId, fromSessionId})
+            setTimeout(() => { this.hops = 0 }, 30_000)
         } catch (err) {
             this.current = null
             void this.errorCrash(`Something went wrong(hop failed)! with error: ${err}`)
