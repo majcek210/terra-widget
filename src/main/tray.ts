@@ -1,9 +1,8 @@
 import { Tray, Menu, App, nativeImage} from "electron";
 import { retry, onState } from "./session";
 import { openSettingsWindow } from ".";
-import { trayIcon, iconPath } from "./icon";
-import { SessionState } from "../lib/types"
-import { build } from "electron-vite";
+import { trayIcon, iconPath, macIcon} from "./icon";
+import type { SessionState } from "../lib/types"
 
 let tray: Tray | null = null;
 
@@ -13,7 +12,7 @@ function buildMenu(app: App, s?: SessionState) {
     return Menu.buildFromTemplate([
         { label: `Terra widget: ${status}`, enabled: false},
         { type: "separator"},
-        { label: "Setttings", click: () => openSettingsWindow()},
+        { label: "Settings", click: () => openSettingsWindow()},
         { label: "Reconnect", click: () => retry()},
         { type: "separator"},
         { label: "Quit", click: () => app.quit() }
@@ -24,7 +23,8 @@ function buildMenu(app: App, s?: SessionState) {
 export async function createTray(app : App) {
 
 
-    const image = trayIcon()
+    const image = (process.platform == "darwin") ? macIcon() : trayIcon()
+
     if (image.isEmpty()) {
         console.error("Tray icon failed to load:", iconPath);
         return;
@@ -44,5 +44,8 @@ export async function createTray(app : App) {
 
     tray.setContextMenu(buildMenu(app))
 
+    if (process.platform === "win32") {
+        tray.on("click", () => openSettingsWindow())
+    }
 
 }

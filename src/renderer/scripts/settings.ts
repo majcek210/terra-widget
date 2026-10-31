@@ -75,6 +75,8 @@ async function load() {
 
     transparency_label.textContent = `Transparency (${data.settings.transparency * 100}%)`
     transparency.value = String(data.settings.transparency)
+
+    plainToken.checked = data.settings.plainTextToken
     
     showToken(data.token)
 }
