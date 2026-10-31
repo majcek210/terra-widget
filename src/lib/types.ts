@@ -71,3 +71,7 @@ export type View = {
     receivedAt: number
     unclaimedSeconds: number
 }
+
+export type LoginFailure = "cancelled" | "timeout" | "failed"
+export type LoginResult = { ok: true, token: string} | { ok:false, reason: LoginFailure}
+export type LoginOptions = { visible: boolean; startUrl: string; timeoutMs: number}

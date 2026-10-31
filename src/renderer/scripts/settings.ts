@@ -18,6 +18,16 @@ const display = $<HTMLSelectElement>("display")
 const closeSettings = $<HTMLInputElement>("close_settings")
 const transparency = $<HTMLInputElement>("transparency")
 const transparency_label = $<HTMLElement>("transparency_label")
+const tokenLogin = $<HTMLButtonElement>("login")
+
+
+const loginErrors: Record<string, string> = {
+    cancelled: "Login window was closed!",
+    timeout: "Login timed out.",
+    failed: "Login failed, try again!"
+}
+
+
 
 function say(text: string, error = false) {
     message.textContent = text
@@ -142,6 +152,19 @@ closeSettings.addEventListener("click", e => {
     e.preventDefault()
     void busy(tokenForm, async () => {
         await window.terraSettings.closeSettings()
+    })
+})
+
+tokenLogin.addEventListener("click", () => {
+    void busy(tokenForm, async () => {
+        say("Finish signing in first at the login window.")
+        const response = await window.terraSettings.login()
+        if (!response?.ok) {
+            say("Login failed!")
+            return
+        }
+        say ("Signed in!")
+        await load()
     })
 })
 
