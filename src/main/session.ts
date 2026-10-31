@@ -1,11 +1,15 @@
 import type { SessionState, Status } from "../lib/types"
 import { powerMonitor, PowerMonitor } from "electron"
-import { loadToken, tokenInfo } from "./secrets"
 import RoomHandler from "../lib/room"
+import { loadToken, tokenInfo, saveToken } from "./secrets"
+
+import { silentRefresh } from "./tokenLogin"
+
 
 import { buildView } from "../lib/view"
 
 const MAX_ATTEMPTS = 10
+const REFRESH_COOLDOWN = 10 * 60_000
 
 let state: SessionState = { status: "signed-out", message: "", view: null, updatedAt: Date.now()}
 const liseners = new Set<(s: SessionState) => void>()
@@ -18,6 +22,20 @@ let stopping = false
 let generation = 0
 let resumeHooked = false
 let receivedAt = 0
+let lastRefresh = 0
+
+async function refreshToken(id:number): Promise<boolean> {
+    if (Date.now() - lastRefresh < REFRESH_COOLDOWN) return false
+    lastRefresh = Date.now()
+    setState("connecting", "Refreshing login")
+    try {
+        const response = await silentRefresh()
+        if (!response.ok || stopping ||id !== generation) return false
+        return (await saveToken(response.token)).ok
+    } catch {
+        return false
+    }
+}
 
 function setState(status: Status, message = "", view: SessionState["view"] = state.view) {
     state = { status, message,  view, updatedAt: Date.now()}
@@ -76,7 +94,8 @@ async function connect() {
 
     const info = await tokenInfo()
     if (!info.exists) return setState("signed-out", "No token saved")
-    if(info.expired) return setState("token-expired", "Token expired")
+    if(info.expired && !(await refreshToken(id))) return setState("token-expired", "Token expired")
+    if (stopping || id !== generation) return
 
     const token = await loadToken()
 

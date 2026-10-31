@@ -25,7 +25,8 @@ contextBridge.exposeInMainWorld("terraSettings", {
         const handler = (_e: IpcRendererEvent, v: number) => cb(v)
         ipcRenderer.on("settings:transparency", handler)
         return () => { ipcRenderer.removeListener("settings:transparency", handler) }
-    }
+    },
+    login: (): Promise<{ ok: boolean, reason?:string} | null> => ipcRenderer.invoke("token:login")
 })
 
 export {};

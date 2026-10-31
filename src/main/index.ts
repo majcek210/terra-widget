@@ -11,6 +11,7 @@ import { appIcon } from "./icon"
 const { autoUpdater } = electronUpdater
 
 import { saveToken, clearToken, tokenInfo } from "./secrets"
+import { signIn, clearLoginSession } from "./tokenLogin"
 
 const BASE_WIDGET_SIZE = { width: 170, height: 150 }
 
@@ -123,6 +124,15 @@ function fromSettings(event: IpcMainInvokeEvent) {
     return !!settingsWindow && !settingsWindow.isDestroyed() && event.sender === settingsWindow.webContents
 }
 
+async function saveAndRestart(raw: string) {
+    const response = await saveToken(raw)
+    if (!response.ok) return { ok: false, reason: "reason" in response ? String(response.reason) : "unknown"}
+    await stop()
+    void start()
+    return { ok:true }
+    
+}
+
 
 const isSingleInstance = await app.requestSingleInstanceLock()
 if (!isSingleInstance) {
@@ -192,19 +202,23 @@ app.whenReady().then(async () => {
     ipcMain.handle("token:save", async (event, raw: unknown) => {
         if (!fromSettings(event)) return null
         if (typeof raw !== "string") return { ok: false, reason: "invalid" }
-        const r = await saveToken(raw)
-        if (!r.ok) return { ok: false, reason: "reason" in r ? String(r.reason) : "unknown" }
-        await stop()
-        void start()
-        return { ok: true }
+        return saveAndRestart(raw)
     })
 
     ipcMain.handle("token:clear", async event => {
         if (!fromSettings(event)) return false
         clearToken()
+        await clearLoginSession()
         await stop()
         void start()
         return true
+    })
+
+    ipcMain.handle("token:login", async event => {
+        if (!fromSettings) return null
+        const response = await signIn()
+        if (!response.ok) return { ok:false, response: response.reason }
+        return saveAndRestart(response.token)
     })
 
 
