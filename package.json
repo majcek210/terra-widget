@@ -24,7 +24,8 @@
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "dist:windows": "electron-vite build && electron-builder --win --publish never",
-    "dist:linux": "electron-vite build && electron-builder --linux --publish never"
+    "dist:linux": "electron-vite build && electron-builder --linux --publish never",
+    "dist:mac": "electron-vite build && electron-builder --mac --publish never"
   },
   "build": {
     "appId": "com.majcek210.terrawidget",
@@ -49,6 +50,16 @@
       "maintainer": "majcek210 <maj.plenjsek@hotmail.com>",
       "executableArgs": ["--ozone-platform=x11"],
       "artifactName": "${name}-${version}-${arch}.${ext}"
+    },
+    "mac": {
+      "target": [
+          { "target": "dmg", "arch": ["x64", "arm64"]},
+          { "target": "zip", "arch": ["x64", "arm64"]}
+      ],
+      "icon": "src/assets/icon-512.png",
+      "category": "public.app-category.utilities",
+      "identity": null,
+      "extendInfo": { "LSUIElement": true}
     },
     "nsis": {
       "oneClick": false,
