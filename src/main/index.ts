@@ -50,6 +50,8 @@ function createWindow(corner: corner,marginX: number, marginY: number, size: num
         maximizable: false,
         alwaysOnTop: true,
         transparent: true,
+        hasShadow: false, // this is for mac
+        focusable: false, // for linux
 
         ...widgetPosition(corner,marginX, marginY, WIDGET_SIZE.width, WIDGET_SIZE.height, displayId),
 
@@ -62,6 +64,12 @@ function createWindow(corner: corner,marginX: number, marginY: number, size: num
         
         
     });
+
+    if (process.platform == "darwin") {
+        app.dock?.hide()
+        win.setAlwaysOnTop(true, "screen-saver")
+        win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true})
+    }
 
     win.setIgnoreMouseEvents(true)
 
@@ -151,7 +159,8 @@ app.whenReady().then(async () => {
         autoUpdater.on("update-available", () => {
             const isPortableWin = !!process.env.PORTABLE_EXECUTABLE_FILE
             const isLinuxNoAppImage = process.platform === "linux" && !process.env.APPIMAGE
-            if (isPortableWin ||isLinuxNoAppImage) {
+            const isMac = process.platform === "darwin"
+            if (isPortableWin || isLinuxNoAppImage || isMac) {
                 shell.openExternal("https://github.com/majcek210/terra-widget/releases")
             }
         })

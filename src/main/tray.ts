@@ -1,7 +1,6 @@
 import { Tray, Menu, App, nativeImage} from "electron";
 import { retry, onState } from "./session";
 import { openSettingsWindow } from ".";
-import path from "path";
 import { trayIcon, iconPath } from "./icon";
 
 let tray: Tray | null = null;
