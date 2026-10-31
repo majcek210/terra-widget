@@ -129,7 +129,7 @@ export async function updateSettings(patch: Partial<Settings>): Promise<settings
         return { success: false, error: "Invalid patch" }
     }
 
-    const allowedPatches = ["marginX", "marginY", "debug", "version", "corner", "size", "displayId", "transparency"]
+    const allowedPatches = ["marginX", "marginY", "debug", "version", "corner", "size", "displayId", "transparency", "plainTextToken", "autoStartUp"]
     const updated = { ...currentSettings }
 
     for (const [key, value] of Object.entries(patch)) {
@@ -179,6 +179,7 @@ export async function updateSettings(patch: Partial<Settings>): Promise<settings
             case "autoStartUp":
                 if (typeof value !== "boolean") return { success: false, error: "Invalid value"}
                 updated.autoStartUp = value
+                break
             }
     }
 

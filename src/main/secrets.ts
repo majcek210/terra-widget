@@ -2,6 +2,7 @@ import { app, safeStorage } from "electron"
 import { join } from "path"
 import { readFileSync, writeFile, writeFileSync, renameSync, existsSync, rmSync } from "fs"
 import type { checkResult, ExpResult } from "./../lib/types"
+import { getSettings } from "./settings"
 
 const file = () => join(app.getPath("userData"), "token.bin")
 let cached: string | null = null 
@@ -26,9 +27,11 @@ function clean(raw:string) : string | null {
 
 }
 
-function canEncrypt() {
-    if (!safeStorage.isAsyncEncryptionAvailable()) return false
-    if (process.platform === "linux" && safeStorage.getSelectedStorageBackend() === "basic_text") return false
+async function canEncrypt() {
+    if (!(await safeStorage.isAsyncEncryptionAvailable())) return false
+    if (process.platform === "linux" && safeStorage.getSelectedStorageBackend() === "basic_text") {
+        return getSettings().plainTextToken
+    }
     return true
 }
 
@@ -69,7 +72,7 @@ export async function saveToken(raw: string) {
     if (!checked.ok) return checked
 
     cached = token;
-    if (!canEncrypt()) return { ok: true, saved: false, expiresAt: checked.expiresAt }
+    if (! await canEncrypt()) return { ok: true, saved: false, expiresAt: checked.expiresAt }
 
     const tmp = file() + ".tmp"
     try {

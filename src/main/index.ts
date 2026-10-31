@@ -144,7 +144,7 @@ async function saveAndRestart(raw: string) {
     if (!response.ok) return { ok: false, reason: "reason" in response ? String(response.reason) : "unknown"}
     await stop()
     void start()
-    return { ok:true }
+    return { ok:true, saved: "saved" in response ? response.saved : true  }
     
 }
 
