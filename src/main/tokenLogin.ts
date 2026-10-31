@@ -1,5 +1,9 @@
-import { BrowserWindow, session } from "electron"
+import { app, BrowserWindow, session } from "electron"
+import { join } from "node:path"
+import { existsSync, writeFileSync, rmSync } from "node:fs"
 import type { LoginResult, LoginOptions } from "../lib/types"
+
+const marker = () => join(app.getPath("userData"), "login-session")
 
 const config = {
     partition: "persist:terra-login",
@@ -54,6 +58,10 @@ async function tryLogin(options: LoginOptions) {
             ses.webRequest.onBeforeRequest(null)
             if (currentWindow === win) currentWindow = null
             if (!win.isDestroyed()) win.destroy()
+            try {
+                if (result.ok) writeFileSync(marker(), "")
+                else if (!options.visible && result.reason === "failed") rmSync(marker(), { force: true })
+            } catch {}
             resolve(result)
         }
 
@@ -112,13 +120,7 @@ function once(options: LoginOptions): Promise<LoginResult> {
 }
 
 export async function hasLoginSession(): Promise<boolean> {
-    try {
-        const  cookies = await session.fromPartition(config.partition).cookies.get({})
-        const hasCookies = cookies.length > 0
-        return hasCookies
-    } catch {
-        return false
-    }
+    return existsSync(marker())
 }
 
 export async function signIn() : Promise<LoginResult> {
@@ -134,5 +136,6 @@ export function silentRefresh(): Promise<LoginResult> {
 }
 
 export async function clearLoginSession() {
+    rmSync(marker(), { force: true })
     try { await session.fromPartition(config.partition).clearStorageData() } catch {}
 }

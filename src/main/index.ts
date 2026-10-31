@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen, ipcMain, shell, safeStorage } from "electron";
+import { app, BrowserWindow, screen, ipcMain, shell } from "electron";
 import type { IpcMainInvokeEvent } from "electron";
 import { fileURLToPath } from "node:url";
 import { loadSettings, getSettings, updateSettings, onSettingsChanged } from "./settings";
@@ -10,7 +10,7 @@ import { appIcon } from "./icon"
 
 const { autoUpdater } = electronUpdater
 
-import { saveToken, clearToken, tokenInfo } from "./secrets"
+import { saveToken, clearToken, tokenInfo, enablePlainTextStorage } from "./secrets"
 import { signIn, clearLoginSession, hasLoginSession } from "./tokenLogin"
 import { isAutoStart, setAutoStart } from "./autoStartUp";
 
@@ -178,9 +178,7 @@ app.whenReady().then(async () => {
     
     const settings = getSettings()
 
-    if (process.platform === "linux" && settings.plainTextToken) {
-        safeStorage.setUsePlainTextEncryption(true)
-    }
+    if (settings.plainTextToken) enablePlainTextStorage()
 
 
 
@@ -245,8 +243,9 @@ app.whenReady().then(async () => {
 
     ipcMain.handle("autostart:set", (event, state: unknown) => {
         if (!fromSettings(event) || typeof state !== "boolean") return null
+        if (!app.isPackaged) return { ok: false, reason: "dev" }
         setAutoStart(state)
-        return isAutoStart()
+        return { ok: true, enabled: isAutoStart() }
     })
 
 
@@ -258,7 +257,7 @@ app.whenReady().then(async () => {
 
     
 
-    onSettingsChanged(s => {
+    const placeWidget = (s: Settings) => {
         if (widgetWindow.isDestroyed()) return
 
         const width = Math.round(BASE_WIDGET_SIZE.width * s.size)
@@ -281,8 +280,13 @@ app.whenReady().then(async () => {
         })
         widgetWindow.webContents.setZoomFactor(s.size)
         widgetWindow.webContents.send("settings:transparency", s.transparency)
+    }
 
-    })
+    onSettingsChanged(placeWidget)
+
+    screen.on("display-added", () => placeWidget(getSettings()))
+    screen.on("display-removed", () => placeWidget(getSettings()))
+    screen.on("display-metrics-changed", () => placeWidget(getSettings()))
 
     onState(s => {
         for (const w of BrowserWindow.getAllWindows()) {
@@ -299,8 +303,14 @@ app.whenReady().then(async () => {
     void start()
 });
 
-app.on("before-quit", async () => {
-    await stop()
+let isQuitting = false
+
+app.on("before-quit", async event => {
+    if (isQuitting) return
+    isQuitting = true
+
+    event.preventDefault()
+    stop().finally( () => app.quit())
 })
 
 app.on("second-instance", () => {

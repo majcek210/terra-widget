@@ -21,12 +21,5 @@ export function macIcon() {
 export function trayIcon() {
     const image = appIcon()
     if (image.isEmpty() || process.platform === "win32") return image
-
-    if (process.platform == "darwin")  {
-        const small = nativeImage.createFromPath(iconPath)
-        small.setTemplateImage(true)
-        return small
-    }
-
     return image.resize({width: 22, height: 22, quality: "best"})
 }

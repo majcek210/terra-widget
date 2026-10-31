@@ -1,4 +1,3 @@
-import { roomConnections } from './../lib/types';
 import { app } from "electron"
 import { join, dirname } from "node:path"
 import { homedir } from "node:os"

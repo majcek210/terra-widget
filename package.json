@@ -41,7 +41,8 @@
       "target": [
         "nsis",
         "portable"
-      ]
+      ],
+      "icon": "src/assets/icon-512.png"
     },
     "linux": {
       "target": ["AppImage", "deb"],
@@ -58,7 +59,7 @@
       ],
       "icon": "src/assets/icon-512.png",
       "category": "public.app-category.utilities",
-      "identity": null,
+      "identity": "-",
       "extendInfo": { "LSUIElement": true}
     },
     "nsis": {

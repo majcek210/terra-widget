@@ -30,6 +30,8 @@ const loginErrors: Record<string, string> = {
 
 
 
+const transparencyText = (v: number) => `Transparency (${Math.round(v * 100)}%)`
+
 function say(text: string, error = false) {
     message.textContent = text
     message.dataset.error = String(error)
@@ -74,7 +76,7 @@ async function load() {
     size_label.textContent = `Widget size (${data.settings.size}x)`
     size.value = String(data.settings.size)
 
-    transparency_label.textContent = `Transparency (${data.settings.transparency * 100}%)`
+    transparency_label.textContent = transparencyText(data.settings.transparency)
     transparency.value = String(data.settings.transparency)
 
     plainToken.checked = data.settings.plainTextToken
@@ -105,7 +107,9 @@ tokenForm.addEventListener("submit", e => {
             say(`Token not saved (${r?.reason ?? "unknown"})`, true)
             return
         }
-        say("Token saved")
+        say(r.saved === false
+            ? "Token works, but no keyring was found, so it is only kept until you quit."
+            : "Token saved")
         await load()
     })
 })
@@ -122,7 +126,7 @@ size.addEventListener("input", () => {
     size_label.textContent = `Widget size (${size.value}x)`
 })
 transparency.addEventListener("input", () => {
-    transparency_label.textContent = `Transparency (${(Math.floor(transparency.valueAsNumber * 100))}%)`
+    transparency_label.textContent = transparencyText(transparency.valueAsNumber)
 })
 
 settingsForm.addEventListener("submit", e => {
@@ -164,16 +168,24 @@ tokenLogin.addEventListener("click", () => {
         say("Finish signing in first at the login window.")
         const response = await window.terraSettings.login()
         if (!response?.ok) {
-            say("Login failed!")
+            say(loginErrors[response?.reason ?? "failed"] ?? loginErrors.failed, true)
             return
         }
-        say ("Signed in!")
+        say(response.saved === false
+            ? "Signed in, but no keyring was found, so you'll need to sign in again after quitting."
+            : "Signed in!")
         await load()
     })
 })
 
-autoStartup.addEventListener("change", () => {
-    void window.terraSettings.setAutoStart(autoStartup.checked).then(v => { autoStartup.checked = !!v })
+autoStartup.addEventListener("change", async () => {
+    const r = await window.terraSettings.setAutoStart(autoStartup.checked)
+    if (!r?.ok) {
+        autoStartup.checked = false
+        say(r?.reason === "dev" ? "Start at startup only works in the installed app." : "Could not change the startup setting", true)
+        return
+    }
+    autoStartup.checked = !!r.enabled
 })
 
 if (navigator.userAgent.includes("Linux")) $("plain_row").hidden = false
