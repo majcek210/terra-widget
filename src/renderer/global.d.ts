@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 /// <reference types="electron-vite/node" />
 import type { SessionState, Settings, TokenInfo, settingsUpdateResult, SettingsPatch } from "../lib/types"
 
@@ -18,6 +19,8 @@ declare global {
       getDisplays(): Promise<{ id: number; label: string }[]>
       onTransparency(cb: (s: number) => void): () => void
       login(): Promise<{ ok: boolean; reason?: string} | null >
+      getAutoStart(): Promise<boolean |null>
+      setAutoStart(on:boolean): Promise<boolean | null>
     }
   }
 }

@@ -78,6 +78,14 @@
       {
         "from": "src/assets/icon-512.png",
         "to": "icon-512.png"
+      },
+      {
+        "from": "src/assets/iconTemplate.png",
+        "to": "iconTemplate.png"
+      },
+      {
+        "from": "src/assets/iconTemplate@2x.png",
+        "to": "iconTemplate@2x.png"
       }
     ]
   },

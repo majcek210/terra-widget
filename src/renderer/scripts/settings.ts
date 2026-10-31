@@ -20,6 +20,7 @@ const transparency = $<HTMLInputElement>("transparency")
 const transparency_label = $<HTMLElement>("transparency_label")
 const tokenLogin = $<HTMLButtonElement>("login")
 const plainToken = $<HTMLInputElement>("plain_token")
+const autoStartup = $<HTMLInputElement>("auto_startup")
 
 const loginErrors: Record<string, string> = {
     cancelled: "Login window was closed!",
@@ -77,6 +78,7 @@ async function load() {
     transparency.value = String(data.settings.transparency)
 
     plainToken.checked = data.settings.plainTextToken
+    autoStartup.checked = !!(await window.terraSettings.getAutoStart())
     
     showToken(data.token)
 }
@@ -168,6 +170,10 @@ tokenLogin.addEventListener("click", () => {
         say ("Signed in!")
         await load()
     })
+})
+
+autoStartup.addEventListener("change", () => {
+    void window.terraSettings.setAutoStart(autoStartup.checked).then(v => { autoStartup.checked = !!v })
 })
 
 if (navigator.userAgent.includes("Linux")) $("plain_row").hidden = false

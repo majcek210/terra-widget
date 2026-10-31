@@ -26,7 +26,10 @@ contextBridge.exposeInMainWorld("terraSettings", {
         ipcRenderer.on("settings:transparency", handler)
         return () => { ipcRenderer.removeListener("settings:transparency", handler) }
     },
-    login: (): Promise<{ ok: boolean, reason?:string} | null> => ipcRenderer.invoke("token:login")
+    login: (): Promise<{ ok: boolean, reason?:string} | null> => ipcRenderer.invoke("token:login"),
+
+    getAutoStart: (): Promise<boolean | null> => ipcRenderer.invoke("autostart:get"),
+    setAutoStart: (state:boolean): Promise<boolean | null> => ipcRenderer.invoke("autostart:set", state)
 })
 
 export {};

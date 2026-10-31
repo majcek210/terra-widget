@@ -15,7 +15,8 @@ const DEFAULT_SETTINGS: Settings = {
     size: 1,
     displayId: 0,
     transparency: 0,
-    plainTextToken: false
+    plainTextToken: false,
+    autoStartUp: false
 }
 
 const MAX_MARGIN = 300
@@ -59,6 +60,8 @@ function validate(input: any) : Settings {
         settings.transparency = input.transparency
     if (typeof input?.plainTextToken === "boolean")
         settings.plainTextToken = input.plainTextToken
+    if (typeof input?.autoStartUp === "boolean")
+        settings.autoStartUp = input.autoStartUp
 
     return settings
 }
@@ -173,6 +176,9 @@ export async function updateSettings(patch: Partial<Settings>): Promise<settings
                 if (typeof value !== "boolean") return { success: false, error: "Invalid value"}
                 updated.plainTextToken = value
                 break
+            case "autoStartUp":
+                if (typeof value !== "boolean") return { success: false, error: "Invalid value"}
+                updated.autoStartUp = value
             }
     }
 

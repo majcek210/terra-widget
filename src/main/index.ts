@@ -12,6 +12,7 @@ const { autoUpdater } = electronUpdater
 
 import { saveToken, clearToken, tokenInfo } from "./secrets"
 import { signIn, clearLoginSession, hasLoginSession } from "./tokenLogin"
+import { isAutoStart, setAutoStart } from "./autoStartUp";
 
 const BASE_WIDGET_SIZE = { width: 170, height: 150 }
 
@@ -240,6 +241,14 @@ app.whenReady().then(async () => {
         return saveAndRestart(response.token)
     })
 
+    ipcMain.handle("autostart:get", event => (fromSettings(event) ? isAutoStart() : null))
+
+    ipcMain.handle("autostart:set", (event, state: unknown) => {
+        if (!fromSettings(event) || typeof state !== "boolean") return null
+        setAutoStart(state)
+        return isAutoStart()
+    })
+
 
 
     if (process.platform === "linux") {
@@ -285,7 +294,7 @@ app.whenReady().then(async () => {
 
     if(!(await tokenInfo()).exists && !(await hasLoginSession())) openSettingsWindow()
 
-   
+   if (isAutoStart()) setAutoStart(true)
 
     void start()
 });
