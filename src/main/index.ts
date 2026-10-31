@@ -215,9 +215,9 @@ app.whenReady().then(async () => {
     })
 
     ipcMain.handle("token:login", async event => {
-        if (!fromSettings) return null
+        if (!fromSettings(event)) return null
         const response = await signIn()
-        if (!response.ok) return { ok:false, response: response.reason }
+        if (!response.ok) return { ok:false, reason: response.reason }
         return saveAndRestart(response.token)
     })
 
