@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen, ipcMain, shell } from "electron";
+import { app, BrowserWindow, screen, ipcMain, shell, safeStorage } from "electron";
 import type { IpcMainInvokeEvent } from "electron";
 import { fileURLToPath } from "node:url";
 import { loadSettings, getSettings, updateSettings, onSettingsChanged } from "./settings";
@@ -11,7 +11,7 @@ import { appIcon } from "./icon"
 const { autoUpdater } = electronUpdater
 
 import { saveToken, clearToken, tokenInfo } from "./secrets"
-import { signIn, clearLoginSession } from "./tokenLogin"
+import { signIn, clearLoginSession, hasLoginSession } from "./tokenLogin"
 
 const BASE_WIDGET_SIZE = { width: 170, height: 150 }
 
@@ -20,6 +20,9 @@ const icon = appIcon()
 
 if (process.platform === "linux") {
     app.commandLine.appendSwitch("ozone-platform", "x11")
+    app.commandLine.appendSwitch("enable-transparent-visuals")
+
+    if (process.env.TERRA_DISABLE_GPU === "1") app.disableHardwareAcceleration()
 }
 
 
@@ -52,6 +55,7 @@ function createWindow(corner: corner,marginX: number, marginY: number, size: num
         transparent: true,
         hasShadow: false, // this is for mac
         focusable: false, // for linux
+        backgroundColor: "#00000000",
 
         ...widgetPosition(corner,marginX, marginY, WIDGET_SIZE.width, WIDGET_SIZE.height, displayId),
 
@@ -69,6 +73,8 @@ function createWindow(corner: corner,marginX: number, marginY: number, size: num
         app.dock?.hide()
         win.setAlwaysOnTop(true, "screen-saver")
         win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true})
+    } else if (process.platform == "linux") {
+        win.setVisibleOnAllWorkspaces(true)
     }
 
     win.setIgnoreMouseEvents(true)
@@ -171,6 +177,10 @@ app.whenReady().then(async () => {
     
     const settings = getSettings()
 
+    if (process.platform === "linux" && settings.plainTextToken) {
+        safeStorage.setUsePlainTextEncryption(true)
+    }
+
 
 
     //ipc stuff
@@ -272,6 +282,8 @@ app.whenReady().then(async () => {
     })
 
     await createTray(app)
+
+    if(!(await tokenInfo()).exists && !(await hasLoginSession())) openSettingsWindow()
 
    
 

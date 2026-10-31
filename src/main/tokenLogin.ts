@@ -111,6 +111,16 @@ function once(options: LoginOptions): Promise<LoginResult> {
     return active
 }
 
+export async function hasLoginSession(): Promise<boolean> {
+    try {
+        const  cookies = await session.fromPartition(config.partition).cookies.get({})
+        const hasCookies = cookies.length > 0
+        return hasCookies
+    } catch {
+        return false
+    }
+}
+
 export async function signIn() : Promise<LoginResult> {
     if (active && !activeVisible) {
         currentWindow?.destroy()

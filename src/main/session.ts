@@ -3,7 +3,7 @@ import { powerMonitor, PowerMonitor } from "electron"
 import RoomHandler from "../lib/room"
 import { loadToken, tokenInfo, saveToken } from "./secrets"
 
-import { silentRefresh } from "./tokenLogin"
+import { silentRefresh, hasLoginSession } from "./tokenLogin"
 
 
 import { buildView } from "../lib/view"
@@ -93,8 +93,12 @@ async function connect() {
     if (stopping ||id !== generation) return
 
     const info = await tokenInfo()
-    if (!info.exists) return setState("signed-out", "No token saved")
-    if(info.expired && !(await refreshToken(id))) return setState("token-expired", "Token expired")
+    if (!info.exists) {
+
+        const canRestore = await hasLoginSession()
+        if (!canRestore || !(await refreshToken(id))) return setState("signed-out", "No token saved")
+    } else if (info.expired && !(await refreshToken(id))) return setState("token-expired", "Token expired")
+   
     if (stopping || id !== generation) return
 
     const token = await loadToken()

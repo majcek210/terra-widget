@@ -37,6 +37,10 @@
                 
                 <input id="token_input" type="password" spellcheck="false" autocomplete="off"
                        autocapitalize="off" required maxlength="4096" placeholder="Paste your token">
+                <label class="check" id="plain_row" hidden>
+                    <input id="plain_token" type="checkbox">
+                    Save token without a keyring (It will be readable by any program running as you). A restart will be needed.
+                </label>
                 <div class="row">
                     <button type="submit" class="primary">Save token</button>
                     <button type="button" id="token_clear">Sign out</button>

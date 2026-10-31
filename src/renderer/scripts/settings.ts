@@ -19,7 +19,7 @@ const closeSettings = $<HTMLInputElement>("close_settings")
 const transparency = $<HTMLInputElement>("transparency")
 const transparency_label = $<HTMLElement>("transparency_label")
 const tokenLogin = $<HTMLButtonElement>("login")
-
+const plainToken = $<HTMLInputElement>("plain_token")
 
 const loginErrors: Record<string, string> = {
     cancelled: "Login window was closed!",
@@ -138,7 +138,7 @@ settingsForm.addEventListener("submit", e => {
         const transparencyValue = transparency.valueAsNumber
         
         const displayId = Number(display.value)
-        const r = await window.terraSettings.update({ marginX: x, marginY: y, debug: debug.checked, corner: cornerValue, size: sizeValue, displayId: displayId, transparency: transparencyValue})
+        const r = await window.terraSettings.update({ marginX: x, marginY: y, debug: debug.checked, corner: cornerValue, size: sizeValue, displayId: displayId, transparency: transparencyValue, plainTextToken: plainToken.checked})
         if (!r || !r.success) {
             say(r ? r.error : "Could not save", true)
             return
@@ -167,5 +167,7 @@ tokenLogin.addEventListener("click", () => {
         await load()
     })
 })
+
+if (navigator.userAgent.includes("Linux")) $("plain_row").hidden = false
 
 void load()

@@ -14,7 +14,8 @@ const DEFAULT_SETTINGS: Settings = {
     corner: "bottom-left",
     size: 1,
     displayId: 0,
-    transparency: 0
+    transparency: 0,
+    plainTextToken: false
 }
 
 const MAX_MARGIN = 300
@@ -56,6 +57,8 @@ function validate(input: any) : Settings {
     }
     if (typeof input?.transparency === "number" && input.transparency <= 1 && input.transparency >= 0)
         settings.transparency = input.transparency
+    if (typeof input?.plainTextToken === "boolean")
+        settings.plainTextToken = input.plainTextToken
 
     return settings
 }
@@ -165,6 +168,10 @@ export async function updateSettings(patch: Partial<Settings>): Promise<settings
             case "transparency":
                 if (typeof value !== "number" || value < 0 || value > 1) return { success: false, error: "invalid transparency setttings"}
                 updated.transparency = value
+                break
+            case "plainTextToken":
+                if (typeof value !== "boolean") return { success: false, error: "Invalid value"}
+                updated.plainTextToken = value
                 break
             }
     }
