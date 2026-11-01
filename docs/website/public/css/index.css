@@ -63,3 +63,14 @@ button {
 .downolad_status {
     color: gray
 }
+
+.av_notice {
+    background-color: blanchedalmond;
+    font-size: 20px;
+    padding: 1px;
+}
+
+.not_found {
+    align-content: center;
+}
+
