@@ -22,6 +22,7 @@ func main() {
 		case "/faq":
 			path = "/faq.html"
 		default:
+			w.WriteHeader(http.StatusNotFound)
 			path = "404.html"
 		}
 
