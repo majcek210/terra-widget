@@ -1,5 +1,7 @@
 ![time](https://hackatime.hackclub.com/api/v1/badge/U0C7Q1X50RX/majcek210/terra-widget)
 
+Aditional information and direct downloads are available on the website: https://terra-widget.majcek210.dev
+
 # terra-widget
 The project's goal is to make a widget for your desktop that would show off your water goals and working hours, so you wont need to have terra open everytime.
 The project will for now be written in typescript.
@@ -10,10 +12,10 @@ Thanks!
 You computer will probably block the exe from running. To unblock it: Right-click Terra.Widget.x.x.x.exe, choose Properties, tick Unblock at the bottom, click OK, then double-click it.
 
 # Setup
-1. Grab the latest exe from [Releases](https://github.com/majcek210/terra-widget/releases). `Terra.Widget.Setup.x.x.x.exe` installs it, `Terra.Widget.x.x.x.exe` is portable and just runs.
-2. Windows will probably say "Windows protected your PC" because the exe isn't signed. Click **More info** and then **Run anyway**.
-3. The widget sits in one of the corners of your screen. It has no taskbar icon, so you will need to find it in the tray.
-4. If you click the terra widget tray icon directly it will take you to settings, right right clicking it you can also quit and reconnect. In the settings , paste your Terra token (see below) and hit **Save token**. You can move the widget with the margins in the same window.
+1. Grab the latest exe from [Releases](https://github.com/majcek210/terra-widget/releases) or https://terra-widget.majcek210.dev/install. `Terra.Widget.Setup.x.x.x.exe` installs it, `Terra.Widget.x.x.x.exe` is portable and just runs. There are also expirimental linux and mac options.
+3. Windows will probably say "Windows protected your PC" because the exe isn't signed. Click **More info** and then **Run anyway**.
+4. The widget sits in one of the corners of your screen. It has no taskbar icon, so you will need to find it in the tray.
+5. If you click the terra widget tray icon directly it will take you to settings, right right clicking it you can also quit and reconnect. In the settings , paste your Terra token (see below) and hit **Save token**. You can move the widget with the margins in the same window.
 Your token is saved encrypted on your PC (only your Windows account can read it) and is only sent to Terra.
 
 # Windows installation and updates
@@ -37,15 +39,11 @@ Expect bugs/crashes/errors on linux
 
 For the tray to work you will need AppIndicator and KStatusNotifierItem Support extensions. If you do not wish to use the tray you can reopen the widget app once more and that will bring you up the settings.
 
+## WIDGET SETUP
 
-## Getting your token
-1. Open [terra.hackclub.com](https://terra.hackclub.com) in your browser and press **F12** to open DevTools.
-2. Go to the **Network** tab and type `exchange` in the filter box.
-3. Log in to Terra (if you're already logged in, log out and back in, the request only shows up on login).
-4. Click the `exchange` request and open **Response**. Copy the value of `"token"`, without the quotes.
-5. Close the Terra tab, otherwise the widget will tell you Terra is open somewhere else.
+Please see the https://tera-widget.majcek210.dev/install
 
-Treat the token like a password and don't share it. When it expires the widget asks you to sign in again, just repeat these steps.
+Treat the token like a password and don't share it.
 
 # DOCS
 
@@ -65,27 +63,7 @@ In settings you can configure:
 > -  Screen | screen which the widget will use
 
 ## HOW IT ALL WORKS
-
-Most important part was the research in the first version of the app. I had to inspect traffic request and stuff. I alayzed them with them of an AI.
-
-So I have figured that terra runs on colyseus, which is a web multiplayer framework. When I looked in to it, I saw that they already have offical SDK. <br>
-For the point of this project, I decided to use a programming language typescript, as I have some expirience with it and colyseus SDK has good support on there. 
-You might ask why not javascript? Simple, I just prefer some type safety
-
-Then it came the hard part, authenticating with terra servers and joining the right rooms(worlds) while handling all the errors and redirects.
-As we figured out in research, we can use the browser dev tools and inspect the network request when you log in to terra. Thats how ge got the token,
-for the rooms it was simple just looked for the join word request and we had an ID.
-
-How did I connect it?
-
-Firstly before I even began doing any work on the widget, I built the room Handler that could be tested via cli. The handler handles the connection, redirect, island join, errors and whole data fetch logic. After this was done we acually started building the widget.
-
-At first I didn't know what framework to use in order to make a desktop widget as I haven't made any before, so I asked claude. I was recommended to use electron with vite and so here I am.
-It took a lot of time to learn it a bit, but there is still a lot I don't know. 
-
-Assets/designs are bad, as im horible at designing stuff xd.
-
-
+Its on the website now (:
 ## Building it yourself
 ```
 npm install
@@ -94,7 +72,6 @@ npm run dist   # build both exes into release/
 ```
 
 # AI usage
-AI was used to make the settings page(**ONLY** html and css) cause im pretty bad at designing. It was also used to checkup the security before shiping and a bit of ai code was produced here to keep it secure. Also a bit was used for debugging.
-
+AI was used to make the settings page(**ONLY** html and css) cause im pretty bad at designing lol(as you can see on the widget docs website I made myself). AI was used for debuging and security checos before release. But most of the bug fixes were producted by me.
 # a small note
 Note to the reviewers: Comments are for my better understanding and not from ai code (:
