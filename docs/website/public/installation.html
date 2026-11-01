@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+    <head lang="en-US">
+        <meta name="author" value="majcek210">
+        <link rel="stylesheet" href="./css/index.css">
+        <script src="scripts/releases.js" defer></script>
+    </head>
+    <body>
+        <div class="navbar">
+            <p class="title">Terra widget</p>
+            <div class="navbar_container">
+                <a href="/" class="navbar_item">Home</a>
+                <a href="/installation" class="navbar_item">Installation</a>
+                <a class="navbar_item" href="/faq">FAQ</a>
+            </div>
+        </div>
+
+        <div class="installation_intro">
+            <p>All releases are available on github.</p>
+            <p>Recommended method of installation is a <b>setup exe</b> for <b>windows</b>.With this you gain the best device copability and an ability for automatic updates.<p></p>
+        </div>
+        <div class="installation_download">
+            <p>You can download the latest release here or get them directly from my <a href="https://github.com/majcek210/terra-widget/releases">github</a></p>
+            <h2>Windows</h2>
+            <a id="download_win">Download setup exe</a>
+            <h2>Linux(experimental)</h2>
+            <a id="download_linux1">Download .deb</a>
+            <a id="download_linux2">Download .AppImage</a>
+            <h2>Mac(not tested)</h2>
+            <a id="download_mac">Download .dmg</a>
+        <div>
+        <div class="av_notice">
+            <p class="downolad_status" id="downolad_status" hidden>downloading</p>
+            <p>Your computer might try to block the file as its unsigned. On windows fix it with right clicking the file in the file explorer, going to properties and then ticking unblock, pressing OK and reopening the app. </p>
+        </div>
+        <div class="token_setup">
+            <h2>Token setup</h2>
+            <p>To get the widget working you have to set up your terra token. You have 2 options.</p>
+            <h3>Automatic login with terra</h3>
+            <p>Just click the login with terra button in settings and login normaly. This works by intercepting the session token after the login and saveing it your device.</p>
+            <h3>Manual login</h3>
+            <pre>
+            Open <a href="https://terra.hackclub.com">terra.hackclub.com</a> in your browser and press <b>F12</b> to open DevTools.
+            Go to the <b>Network</b> tab and type <i>exchange</i> in the filter box.
+            Log in to Terra (if you're already logged in, log out and back in, the request only shows up on login).
+            Click the <i>exchange</i> request and open <b>Response</b>. Copy the value of <b>token</b>, without the quotes.
+            Close the Terra tab, otherwise the widget will tell you Terra is open somewhere else.
+            </pre>
+
+        </div>
+        <footer class="footer">
+            <p>
+                This project is not officialy affiliated with Terra or Hackclub. Use at your own risk.
+                <br>
+                A fan project made by <a href="https://github.com/majcek210" ><b>@majcek210</b></a>
+           </p>
+        </footer>
+            
+    </body>
+<html>

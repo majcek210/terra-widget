@@ -1,0 +1,65 @@
+.navbar {
+    border: 2px solid orange;
+    display:inline-flex;
+
+    gap: 30px;
+    align-items: center;
+    border-radius: 10px;
+    background-color: white;
+    padding: 10px
+}
+
+.navbar_item {
+    color: rgb(53, 23, 4);
+    padding-right: 10px;
+    border: 2px solid brown;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: blanchedalmond;
+}
+
+.navbar .navbar_container .title {
+    color: orange;
+    border: 10px;
+    border-color: red;
+    padding-left: 10px;
+}
+
+.navbar .navbar_container {
+    padding-right: 10px;
+    gap: 20px
+}
+
+body {
+    background:rgb(240, 230, 218);
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.footer {
+    background:rgb(235, 152, 50);
+    padding: 5px;
+    border-radius: 2px;
+    align-items: flex-start;
+}
+
+
+h2 {
+    color: brown;
+}
+
+h3 {
+    color: brown;
+}
+
+.works {
+    padding-bottom: 10px;
+}
+
+button {
+    background-color: rgb(238, 170, 24);
+    border: 2px solid brown;
+}
+
+.downolad_status {
+    color: gray
+}
