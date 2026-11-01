@@ -45,7 +45,7 @@ function conflict() {
     setState("conflict", "This account is active somewhere else! Close the tab to use it here", null)
     clearRetry()
     retryTimer = setTimeout(() => { 
-        void connect
+        void connect()
     }, RETRY_AFTER_CONFLICT)
 }
 
@@ -104,15 +104,15 @@ async function connect() {
     if (!info.exists) {
 
         const canRestore = await hasLoginSession()
-        if (!canRestore || !(await refreshToken(id))) return setState("signed-out", "No token saved")
-    } else if (info.expired && !(await refreshToken(id))) return setState("token-expired", "Token expired")
+        if (!canRestore || !(await refreshToken(id))) return setState("signed-out", "No token saved", null)
+    } else if (info.expired && !(await refreshToken(id))) return setState("token-expired", "Token expired", null)
    
     if (stopping || id !== generation) return
 
     const token = await loadToken()
 
     if (stopping || id !== generation) return
-    if (!token) return setState("signed-out", "I couldnt read the stored token")
+    if (!token) return setState("signed-out", "I couldnt read the stored token", null)
     
     if (state.status !== "conflict")  {
         setState("connecting", "")

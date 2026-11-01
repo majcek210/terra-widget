@@ -12,10 +12,10 @@ Thanks!
 You computer will probably block the exe from running. To unblock it: Right-click Terra.Widget.x.x.x.exe, choose Properties, tick Unblock at the bottom, click OK, then double-click it.
 
 # Setup
-1. Grab the latest exe from [Releases](https://github.com/majcek210/terra-widget/releases) or https://terra-widget.majcek210.dev/install. `Terra.Widget.Setup.x.x.x.exe` installs it, `Terra.Widget.x.x.x.exe` is portable and just runs. There are also expirimental linux and mac options.
-3. Windows will probably say "Windows protected your PC" because the exe isn't signed. Click **More info** and then **Run anyway**.
-4. The widget sits in one of the corners of your screen. It has no taskbar icon, so you will need to find it in the tray.
-5. If you click the terra widget tray icon directly it will take you to settings, right right clicking it you can also quit and reconnect. In the settings , paste your Terra token (see below) and hit **Save token**. You can move the widget with the margins in the same window.
+1. Grab the latest exe from [Releases](https://github.com/majcek210/terra-widget/releases) or [website](https://terra-widget.majcek210.dev/install). `Terra.Widget.Setup.x.x.x.exe` installs it, `Terra.Widget.x.x.x.exe` is portable and just runs. There are also expirimental linux and mac options.
+2. Windows will probably say "Windows protected your PC" because the exe isn't signed. Click **More info** and then **Run anyway**.
+3. The widget sits in one of the corners of your screen. It has no taskbar icon, so you will need to find it in the tray.
+4. If you click the terra widget tray icon directly it will take you to settings, right right clicking it you can also quit and reconnect. In the settings , paste your Terra token (see below) and hit **Save token**. You can move the widget with the margins in the same window.
 Your token is saved encrypted on your PC (only your Windows account can read it) and is only sent to Terra.
 
 # Windows installation and updates
@@ -39,9 +39,12 @@ Expect bugs/crashes/errors on linux
 
 For the tray to work you will need AppIndicator and KStatusNotifierItem Support extensions. If you do not wish to use the tray you can reopen the widget app once more and that will bring you up the settings.
 
+# Mac support
+Mac support couldn't be tested from my side, so i can not even confirm that it starts. Get a file from releases or websites then install it.
+
 ## WIDGET SETUP
 
-Please see the https://tera-widget.majcek210.dev/install
+Please see the https://terra-widget.majcek210.dev/install
 
 Treat the token like a password and don't share it.
 
@@ -61,6 +64,7 @@ In settings you can configure:
 > -  Debug logging | something for the devs(even tho that the most of it isnt even implemented)
 > -  Widget size | is used to scale the widget if you prefer it bigger(the default is small-1x)
 > -  Screen | screen which the widget will use
+> -  Transparency | Change how see thru your widget is.
 
 ## HOW IT ALL WORKS
 Its on the website now (:
