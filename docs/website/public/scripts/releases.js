@@ -17,7 +17,7 @@ async function loadDownloads() {
     const windowsDownload = document.getElementById("download_win")
     const linuxDeb = document.getElementById("download_linux1")
     const linuxApp = document.getElementById("download_linux2")
-    const mac = document.getElementById("downolad_mac")
+    const mac = document.getElementById("download_mac")
 
     try {
 
