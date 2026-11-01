@@ -6,6 +6,10 @@ import type { hoursUpdateData, roomConnections, roomOptions } from "./types";
 const client = new Client("https://game.terra.hackclub.com")
 const MAX_HOPS = 3;
 
+const SILENCE_LIMIT = 60_000 // 1 min
+const WATCHDOG_IN = 15_000 // 15sec
+
+
 
 
 interface RedirectMessage { levelId: string; farmOwnerId?: string }
@@ -51,6 +55,30 @@ export default class RoomHandler {
 
     }
 
+    lastMessageAt = Date.now()
+
+    private watchdog: NodeJS.Timeout | null = null
+
+    private touch() { this.lastMessageAt = Date.now()}
+
+    private startWatchdog() {
+        this.stopWatchdog()
+        this.touch()
+        this.watchdog = setInterval(() => {
+            if (this.hopping || this.leaving || !this.current) return
+            const quiet = Date.now() - this.lastMessageAt
+            if (quiet > SILENCE_LIMIT) {
+                this.stopWatchdog()
+                void this.errorCrash(`No messages were recived from terra for ${Math.round(quiet / 1000)}s`)
+            } 
+        }, WATCHDOG_IN)
+    }
+
+    private stopWatchdog() {
+        if (this.watchdog) clearInterval(this.watchdog)
+        this.watchdog = null
+    }
+
 
     onHoursUpdate(func: (args : hoursUpdateData) => void) {
         this.connections.onHours.push(func)
@@ -85,6 +113,7 @@ export default class RoomHandler {
         this.leaving = false
         await this.join("town-square")
         this.connected = true
+        this.startWatchdog()
     }
 
     async join(levelId: string, extra : any = {}) {
@@ -107,6 +136,7 @@ export default class RoomHandler {
 
     async disconnect() {
         this.leaving = true
+        this.stopWatchdog()
         const room = this.current
         this.current = null
         if (room) {
@@ -140,15 +170,25 @@ export default class RoomHandler {
         }
     }
     private attach(room: Room) {
+        this.touch()
+
         this.debug(`JOINED room ${room.roomId} session ${room.sessionId}`)
 
         //i was recommened to void these  bc they produce too much uneceserry output
-        room.onMessage("chat.message", () => {})
-        room.onMessage("pingCheck", () => {})
-        room.onMessage("objective.update", () => {})
+        room.onMessage("chat.message", () => this.touch())
+        room.onMessage("objective.update", () => this.touch())
 
         room.onMessage("*", (type,msg) => {
-          this.debug(`unhandled ${String(type)} bytes=${JSON.stringify(msg)?.length ?? 0}`)
+            this.touch()
+            this.debug(`unhandled ${String(type)} bytes=${JSON.stringify(msg)?.length ?? 0}`)
+        })
+
+        // keep it alive
+        room.onMessage("pingCheck", (msg: {id?: unknown}) => {
+            const gap = Date.now() - this.lastMessageAt
+            this.touch()
+            this.debug(`ping check, gap: ${gap} ms`)
+            room.send("pongCheck", { id: msg?.id })
         })
 
 
@@ -171,6 +211,7 @@ export default class RoomHandler {
 
         room.onMessage("hours.update", (data: hoursUpdateData) => {
             this.connections.onHours.forEach(func => func(data));
+            this.touch()
         })
 
 

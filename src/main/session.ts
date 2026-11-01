@@ -12,6 +12,8 @@ import { buildView } from "../lib/view"
 const MAX_ATTEMPTS = 10
 const REFRESH_COOLDOWN = 10 * 60_000
 
+const RETRY_AFTER_CONFLICT = 3 * 60_000
+
 let state: SessionState = { status: "signed-out", message: "", view: null, updatedAt: Date.now()}
 const liseners = new Set<(s: SessionState) => void>()
 
@@ -35,6 +37,16 @@ async function refreshToken(id:number): Promise<boolean> {
     } catch {
         return false
     }
+}
+
+function conflict() {
+    attempt = 0
+    void dropHandler()
+    setState("conflict", "This account is active somewhere else! Close the tab to use it here", null)
+    clearRetry()
+    retryTimer = setTimeout(() => { 
+        void connect
+    }, RETRY_AFTER_CONFLICT)
 }
 
 function setState(status: Status, message = "", view: SessionState["view"] = state.view) {
@@ -102,8 +114,9 @@ async function connect() {
     if (stopping || id !== generation) return
     if (!token) return setState("signed-out", "I couldnt read the stored token")
     
-    setState("connecting", "")
-
+    if (state.status !== "conflict")  {
+        setState("connecting", "")
+    } 
     const roomHandler = new RoomHandler(token, { debug: getSettings().debug })
     handler = roomHandler
 
@@ -126,9 +139,7 @@ async function connect() {
     })
     roomHandler.onConflict(() => {
         if (handler !== roomHandler) return
-        attempt = 0
-        void dropHandler()
-        setState("conflict", "This account is active somewhere else! Close the tab to use it here")
+        conflict()
     })
 
 
@@ -140,8 +151,7 @@ async function connect() {
 
         // had to put this here bc it doesnt register under onConflict, idk why
         if (err && (err.code == 4412)) {
-            void dropHandler()
-            setState("conflict", "This account is active somewhere else! Close the tab to use it here")
+            conflict()
             return
         }
 

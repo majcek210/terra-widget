@@ -49,6 +49,11 @@ const checkForStale = () => {
 }
 
 
+const fill = $(".fill")
+const aiFill = $(".ai_fill")
+const devloggedFill = $(".dev_logged")
+const aiCut = $(".ai_cut")
+
 
 export function render(s: SessionState) {
     latestState = s
@@ -57,18 +62,17 @@ export function render(s: SessionState) {
     document.body.classList.toggle("dim", s.status === "connecting" || s.status === "reconnecting")
     setText("#status", s.status === "error" ? s.message : STATUS_TEXT[s.status])
 
-    if (!s.view) return
+    if (!s.view)  { 
+        reset()
+        return 
+    }
     const values = s.view
 
     const progress = clamp(values.percent,0,100)
     const devlogged = clamp(values.devLoggedPercent, 0 , progress)
     const ai = clamp(values.aiPercent, 0, 100- progress)
 
-    const fill = $(".fill")
-    const aiFill = $(".ai_fill")
-    const devloggedFill = $(".dev_logged")
-    const aiCut = $(".ai_cut")
-
+   
     if (fill) fill.style.height = `${progress}%`
     if (aiFill) { aiFill.style.bottom = `${progress}%`; aiFill.style.height = `${ai}%` }
     if (devloggedFill) devloggedFill.style.height = `${devlogged}%`
@@ -77,6 +81,17 @@ export function render(s: SessionState) {
     setText(".not_claimed",`${hm(values.unclaimedSeconds)} not claimed.`)
     setText(".procentage_value", `${Math.round(progress)}%`)
     setText(".total_hours", `Total hours: ${hm(values.creditedSeconds)}`)
+}
+
+function reset() {
+    if (fill) fill.style.height = "0%"
+    if (aiFill) { aiFill.style.bottom = "0%"; aiFill.style.height = "0%" }
+    if (devloggedFill) devloggedFill.style.height = "0%"
+    if (aiCut) aiCut.style.bottom = "0%"
+
+    setText(".not_claimed","")
+    setText(".procentage_value", "0%")
+    setText(".total_hours", `Total hours: ${hm(0)}`)
 }
 
 
