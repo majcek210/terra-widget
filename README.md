@@ -8,6 +8,10 @@ The project will for now be written in typescript.
 App will require you to provide your own session token(see the setup part for the tutorial) that will be used to run the widget, I might implement some other automatic options, when i test them and check the ToS of terra.
 Thanks!
 
+# showcase
+
+![Showcase](docs/showcase.png)
+
 # Notice
 You computer will probably block the exe from running. To unblock it: Right-click Terra.Widget.x.x.x.exe, choose Properties, tick Unblock at the bottom, click OK, then double-click it.
 
